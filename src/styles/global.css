@@ -207,6 +207,10 @@ a.pill:hover {
 	width: 100vw;
 	margin-inline: calc(50% - 50vw);
 }
+/* A new section starts below any floated figure */
+.post-body > h2 {
+	clear: both;
+}
 .post-body::after {
 	content: '';
 	display: block;

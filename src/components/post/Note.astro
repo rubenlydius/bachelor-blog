@@ -1,0 +1,40 @@
+---
+interface Props {
+	/** Shows a heart, e.g. for a HMW the team voted on */
+	liked?: boolean;
+}
+
+const { liked = false } = Astro.props;
+---
+
+<aside class="note">
+	<slot />
+	{liked && <span class="heart" aria-label="Liked">♥</span>}
+</aside>
+
+<style>
+	.note {
+		position: relative;
+		clear: both;
+		margin: 2rem 0;
+		padding: 1.25rem 1.5rem;
+		background: var(--color-accent-bg);
+		border-left: 1px solid var(--color-accent);
+		border-radius: var(--radius);
+		font-weight: 600;
+		line-height: 1.35;
+	}
+	.note :global(p) {
+		margin: 0;
+	}
+	.heart {
+		position: absolute;
+		right: 0.75rem;
+		bottom: 0.5rem;
+		color: var(--color-accent);
+	}
+	/* Notes inside a row sit side by side */
+	:global(.image-row) > .note {
+		margin: 0;
+	}
+</style>
