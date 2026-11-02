@@ -6,6 +6,7 @@ import { formatHours, totalHours } from '../../data/pillars';
 import { team } from '../../data/team';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getTimeByMember } from '../../lib/time';
+import { url } from '../../lib/url';
 
 const time = await getTimeByMember();
 const max = Math.max(...team.map((member) => totalHours(time[member.id].total)), 1);
@@ -21,7 +22,7 @@ const max = Math.max(...team.map((member) => totalHours(time[member.id].total)),
 		<ul class="team">
 			{team.map((member) => (
 				<li>
-					<a class="profile-link" href={`/team/${member.id}/`}>
+					<a class="profile-link" href={url(`/team/${member.id}/`)}>
 						<MemberPhoto member={member} />
 						<h2>{member.name}</h2>
 					</a>

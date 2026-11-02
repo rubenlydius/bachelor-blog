@@ -5,6 +5,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { timeline } from '../data/timeline';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getPosts } from '../lib/posts';
+import { url } from '../lib/url';
 
 const latest = (await getPosts()).slice(0, 3);
 ---
@@ -36,7 +37,7 @@ const latest = (await getPosts()).slice(0, 3);
 			<section class="section">
 				<div class="latest-header">
 					<h2 class="section-title"><span class="node"></span>Latest posts</h2>
-					<a class="pill" href="/posts/">All posts →</a>
+					<a class="pill" href={url('/posts/')}>All posts →</a>
 				</div>
 				<PostList posts={latest} />
 			</section>

@@ -1,6 +1,7 @@
 ---
 import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
+import { url } from '../../lib/url';
 
 interface Props {
 	src: ImageMetadata | string;
@@ -17,7 +18,7 @@ const { src, alt, caption, reverse = false, wide = false } = Astro.props;
 <section class:list={['two-column', { reverse, wide }]}>
 	<figure>
 		{typeof src === 'string' ? (
-			<img src={src} alt={alt} loading="lazy" />
+			<img src={src.startsWith('/') ? url(src) : src} alt={alt} loading="lazy" />
 		) : (
 			<Image src={src} alt={alt} width={900} />
 		)}

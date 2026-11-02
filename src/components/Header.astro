@@ -1,19 +1,20 @@
 ---
 import Logo from '../assets/logo.svg';
 import { SITE_TITLE } from '../consts';
+import { url } from '../lib/url';
 
 const links = [
-	{ href: '/', label: 'Home' },
-	{ href: '/posts/', label: 'Posts' },
-	{ href: '/team/', label: 'Team' },
+	{ href: url('/'), label: 'Home' },
+	{ href: url('/posts/'), label: 'Posts' },
+	{ href: url('/team/'), label: 'Team' },
 ];
 
 const path = Astro.url.pathname;
-const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const isActive = (href: string) => (href === url('/') ? path === href : path.startsWith(href));
 ---
 
 <header class="container">
-	<a class="logo" href="/" aria-label={`${SITE_TITLE}, home`}>
+	<a class="logo" href={url('/')} aria-label={`${SITE_TITLE}, home`}>
 		<Logo aria-hidden="true" />
 	</a>
 	<nav>

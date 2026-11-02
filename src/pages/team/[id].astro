@@ -9,6 +9,7 @@ import { type TeamMember, team } from '../../data/team';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getPosts } from '../../lib/posts';
 import { getTimeByMember } from '../../lib/time';
+import { url } from '../../lib/url';
 
 export function getStaticPaths() {
 	return team.map((member) => ({ params: { id: member.id }, props: { member } }));
@@ -28,7 +29,7 @@ const firstName = member.name.split(' ')[0];
 
 <BaseLayout title={`${member.name} · ${SITE_TITLE}`} description={`${member.name}, ${member.role}.`}>
 	<div class="container">
-		<a class="pill back" href="/team/">
+		<a class="pill back" href={url('/team/')}>
 			<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M10 6H2M5.5 2.5 2 6l3.5 3.5" /></svg>
 			Team
 		</a>
@@ -67,7 +68,7 @@ const firstName = member.name.split(' ')[0];
 					{time.weeks.map(({ post, hours }) => (
 						<li>
 							<div class="week-header">
-								<a href={`/posts/${post.id}/`}>{post.data.title}</a>
+								<a href={url(`/posts/${post.id}/`)}>{post.data.title}</a>
 								<span class="mono">
 									<FormattedDate date={post.data.date} /> · {formatHours(totalHours(hours))}
 								</span>

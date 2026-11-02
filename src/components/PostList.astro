@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import { getMember } from '../data/team';
+import { url } from '../lib/url';
 import FormattedDate from './FormattedDate.astro';
 
 interface Props {
@@ -14,7 +15,7 @@ const { posts } = Astro.props;
 <ul class="post-list">
 	{posts.map((post) => (
 		<li data-tags={post.data.tags.join('|')}>
-			<a href={`/posts/${post.id}/`}>
+			<a href={url(`/posts/${post.id}/`)}>
 				{post.data.cover ? (
 					<Image src={post.data.cover} alt={post.data.coverAlt} width={720} />
 				) : (

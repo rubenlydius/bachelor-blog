@@ -6,7 +6,8 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://example.com',
+	site: 'https://rubenlydius.github.io',
+	base: '/bachelor-blog',
 	integrations: [mdx(), sitemap()],
 	// Titles (OCR-B) and body (IBM Plex Sans) are loaded from Adobe Fonts in BaseHead.astro
 	fonts: [

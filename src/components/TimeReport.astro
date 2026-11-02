@@ -2,6 +2,7 @@
 import type { MemberId } from '../data/members';
 import { formatHours, type Hours, totalHours } from '../data/pillars';
 import { team } from '../data/team';
+import { url } from '../lib/url';
 import HoursBar from './HoursBar.astro';
 
 interface Props {
@@ -19,7 +20,7 @@ const teamTotal = rows.reduce((sum, row) => sum + totalHours(row.hours), 0);
 		{rows.map(({ member, hours }) => (
 			<li>
 				<div class="row-header">
-					<a href={`/team/${member.id}/`}>{member.name}</a>
+					<a href={url(`/team/${member.id}/`)}>{member.name}</a>
 					<span class="total">{formatHours(totalHours(hours))}</span>
 				</div>
 				<HoursBar hours={hours} max={max} />
