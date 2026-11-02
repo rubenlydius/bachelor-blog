@@ -24,6 +24,8 @@ const { variant = 'accent', wide = false } = Astro.props;
 	}
 	.accent {
 		padding: 2rem 2.25rem;
+		font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+		line-height: 1.3;
 		background: var(--color-text);
 		border-radius: var(--radius-leaf);
 		color: var(--color-accent);
