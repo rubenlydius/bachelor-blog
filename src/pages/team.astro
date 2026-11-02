@@ -23,13 +23,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 						</div>
 					)}
 					<h2>{member.name}</h2>
-					<p class="role">{member.role}</p>
+					<p class="role"><span class="node"></span>{member.role}</p>
 					<p>{member.bio}</p>
 					{member.links && (
 						<ul class="links">
 							{member.links.map((link) => (
 								<li>
-									<a href={link.href}>{link.label}</a>
+									<a class="pill" href={link.href}>{link.label}</a>
 								</li>
 							))}
 						</ul>
@@ -44,7 +44,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	.team {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-		gap: 3rem 2rem;
+		gap: 3.5rem 2rem;
 		margin: 0;
 		padding: 0;
 		list-style: none;
@@ -53,30 +53,42 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 		width: 100%;
 		aspect-ratio: 4 / 5;
 		object-fit: cover;
-		margin-bottom: 1rem;
-		border-radius: var(--radius);
+		margin-bottom: 1.25rem;
+		border-radius: var(--radius-leaf);
 	}
 	.placeholder {
 		display: grid;
 		place-items: center;
 		background: var(--color-accent-bg);
 		color: var(--color-accent);
-		font-size: 4rem;
-		font-weight: 700;
+		font-size: 5rem;
+		font-weight: 600;
+		letter-spacing: -0.04em;
 	}
 	h2 {
-		margin: 0;
+		margin: 0 0 0.35em;
 		font-size: 1.375rem;
 	}
 	.role {
-		margin-bottom: 0.75rem;
-		color: var(--color-muted);
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		margin-bottom: 1rem;
+		padding-bottom: 0.75rem;
+		border-bottom: 1px solid var(--color-line);
+		color: var(--color-text);
+		font-family: var(--font-mono);
+		font-size: var(--text-small);
 	}
 	.links {
 		display: flex;
-		gap: 1rem;
+		gap: 0.5rem;
 		margin: 0;
 		padding: 0;
 		list-style: none;
+	}
+	.links a {
+		color: var(--color-text);
+		text-decoration: none;
 	}
 </style>

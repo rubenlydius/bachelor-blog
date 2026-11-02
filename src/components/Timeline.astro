@@ -12,13 +12,15 @@ const start = time(events[0].date);
 const end = time(events[events.length - 1].date);
 const position = (date: string) => ((time(date) - start) / (end - start)) * 100;
 const format = (date: string) =>
-	new Date(`${date}T00:00:00`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+	new Date(`${date}T00:00:00`)
+		.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })
+		.replace('/', '.');
 ---
 
 <div class="timeline" data-start={start} data-end={end}>
 	<div class="track">
 		<div class="fill"></div>
-		<div class="today"><span>Today</span></div>
+		<div class="today"><span class="mono">today</span></div>
 	</div>
 	<ol>
 		{events.map((event, i) => (
@@ -29,7 +31,7 @@ const format = (date: string) =>
 			>
 				<span class="dot"></span>
 				<span class="label">
-					<time datetime={event.date}>{format(event.date)}</time>
+					<time class="mono" datetime={event.date}>{format(event.date)}</time>
 					<strong>{event.label}</strong>
 				</span>
 			</li>
@@ -58,33 +60,34 @@ const format = (date: string) =>
 <style>
 	.timeline {
 		--progress: 0%;
-		--dot: 1rem;
+		--dot: 0.75rem;
 		position: relative;
 		/* room for labels above and below the bar */
-		padding-block: 4rem;
+		padding-block: 4.5rem 4rem;
 		margin-inline: calc(var(--dot) / 2);
 	}
 	.track {
 		position: relative;
-		height: 4px;
+		height: 1px;
 		background: var(--color-border);
-		border-radius: 999px;
 	}
 	.fill {
 		width: var(--progress);
-		height: 100%;
+		height: 3px;
+		margin-top: -1px;
 		background: var(--color-accent);
-		border-radius: inherit;
+		border-radius: 999px;
 	}
 	.today {
 		display: none;
 		position: absolute;
 		left: var(--progress);
 		top: 50%;
-		width: 2px;
-		height: 1.75rem;
-		background: var(--color-accent);
-		transform: translate(-50%, -50%);
+		width: 1px;
+		height: 2.25rem;
+		background: var(--color-line);
+		/* rises above the bar, so its label stays clear of the labels below */
+		transform: translate(-50%, -100%);
 	}
 	.in-range .today {
 		display: block;
@@ -92,12 +95,12 @@ const format = (date: string) =>
 	.today span {
 		position: absolute;
 		bottom: 100%;
-		left: 50%;
-		transform: translateX(-50%);
-		color: var(--color-accent);
-		font-size: 0.75rem;
-		font-weight: 700;
+		left: 0;
+		padding-bottom: 0.15rem;
+		color: var(--color-text);
+		font-size: 0.6875rem;
 		white-space: nowrap;
+		transform: translateX(-50%);
 	}
 
 	ol {
@@ -115,8 +118,7 @@ const format = (date: string) =>
 		width: var(--dot);
 		height: var(--dot);
 		background: var(--color-bg);
-		border: 3px solid var(--color-border);
-		border-radius: 50%;
+		border: 1px solid var(--color-line);
 		transform: translate(-50%, -50%);
 	}
 	.done .dot {
@@ -149,9 +151,9 @@ const format = (date: string) =>
 		text-align: right;
 		right: calc(var(--dot) / -2);
 	}
-	time {
-		color: var(--color-muted);
-		font-size: 0.8125rem;
+	strong {
+		font-weight: 600;
+		letter-spacing: -0.02em;
 	}
 	.done strong {
 		color: var(--color-accent);

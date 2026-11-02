@@ -21,7 +21,7 @@ const { src, alt, caption, reverse = false, wide = false } = Astro.props;
 		) : (
 			<Image src={src} alt={alt} width={900} />
 		)}
-		{caption && <figcaption>{caption}</figcaption>}
+		{caption && <figcaption class="mono">{caption}</figcaption>}
 	</figure>
 	<div class="text">
 		<slot />
@@ -48,9 +48,7 @@ const { src, alt, caption, reverse = false, wide = false } = Astro.props;
 		border-radius: var(--radius);
 	}
 	figcaption {
-		margin-top: 0.5rem;
-		color: var(--color-muted);
-		font-size: 0.875rem;
+		margin-top: 0.6rem;
 	}
 	.text :global(> :last-child) {
 		margin-bottom: 0;
