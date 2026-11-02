@@ -23,10 +23,26 @@ description: Short summary for the overview and SEO.
 date: 2026-11-02
 cover: ./cover.jpg      # optional
 coverAlt: ...           # optional
-tags: [research]        # optional
+author: ruben           # optional: elitsa | miriam | ruben, links to their profile
+tags: [ux, design]      # optional, become filters on /posts
 draft: true             # optional, drafts only show in dev
 ---
 ```
+
+### Weekly time post
+
+Add a `time` block with hours per member per pillar (`ux`, `design`, `development`; missing ones count as 0).
+The post shows a chart per member, gets the `time` tag automatically, and the hours add up on
+the team page and each profile (`/team/<id>/`). See `src/content/posts/example-time/index.mdx`.
+
+```yaml
+time:
+  elitsa: { ux: 12, design: 4, development: 1 }
+  miriam: { ux: 3, design: 14.5 }
+  ruben: { ux: 2, design: 1.5, development: 16 }
+```
+
+Team members (name, role, bio, photo, links) live in `src/data/team.ts`; their ids in `src/data/members.ts`.
 
 ## Layout components
 

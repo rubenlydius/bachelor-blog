@@ -12,6 +12,7 @@
 	--font-sans: 'ibm-plex-sans', system-ui, sans-serif;
 	--font-mono: var(--font-jetbrains-mono);
 	--font-display: 'ocr-b-std', monospace;
+	--tracking-display: -0.12em; /* OCR-B is wide by design */
 	--text-base: 1.125rem;
 	--text-small: 0.8125rem;
 	--leading: 1.65;
@@ -55,7 +56,7 @@ h4 {
 	margin: 0 0 0.5em;
 	font-family: var(--font-display);
 	font-weight: 400; /* OCR-B only has a regular weight */
-	letter-spacing: -0.12em; /* OCR-B is wide by design */
+	letter-spacing: var(--tracking-display);
 	line-height: 1.1;
 }
 h1 {
@@ -150,7 +151,11 @@ hr {
 	font-size: 0.75rem;
 	line-height: 1.6;
 }
-/* Pill links: black with green text on hover (the bright green needs a dark background for contrast) */
+/* Pill links: black text, then black with green text on hover (the bright green needs a dark background for contrast) */
+a.pill {
+	color: var(--color-text);
+	text-decoration: none;
+}
 a.pill:hover {
 	background: var(--color-text);
 	border-color: var(--color-text);
@@ -236,4 +241,11 @@ a.pill:hover {
 	.page-header {
 		margin-block: 2.5rem 3rem;
 	}
+}
+
+/* Pillar colors for the hours charts (checked for colorblind separation) */
+:root {
+	--pillar-ux: #00b959;
+	--pillar-design: #2a78d6;
+	--pillar-development: #eb6834;
 }

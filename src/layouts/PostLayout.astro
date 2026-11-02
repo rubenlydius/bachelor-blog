@@ -2,12 +2,15 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
+import TimeReport from '../components/TimeReport.astro';
 import { SITE_TITLE } from '../consts';
+import { getMember } from '../data/team';
 import BaseLayout from './BaseLayout.astro';
 
 type Props = CollectionEntry<'posts'>['data'];
 
-const { title, description, date, updated, cover, coverAlt, tags } = Astro.props;
+const { title, description, date, updated, author, cover, coverAlt, tags, time } = Astro.props;
+const member = author && getMember(author);
 ---
 
 <BaseLayout title={`${title} · ${SITE_TITLE}`} description={description} image={cover}>
@@ -23,12 +26,18 @@ const { title, description, date, updated, cover, coverAlt, tags } = Astro.props
 						updated <FormattedDate date={updated} />
 					</span>
 				)}
-				{tags.map((tag) => <span class="pill">{tag}</span>)}
+				{member && (
+					<a class="author" href={`/team/${member.id}/`}>
+						{member.name}
+					</a>
+				)}
+				{tags.map((tag) => <a class="pill" href={`/posts/?tag=${encodeURIComponent(tag)}`}>{tag}</a>)}
 			</div>
 			{cover && <Image class="wide cover" src={cover} alt={coverAlt} width={1600} priority />}
 		</header>
 
 		<div class="post-body">
+			{time && <TimeReport time={time} />}
 			<slot />
 		</div>
 	</article>
@@ -49,6 +58,13 @@ const { title, description, date, updated, cover, coverAlt, tags } = Astro.props
 		margin-top: 2rem;
 		padding-top: 1rem;
 		border-top: 1px solid var(--color-line);
+	}
+	.author {
+		color: var(--color-text);
+		text-decoration: none;
+	}
+	.author:hover {
+		text-decoration: underline;
 	}
 	.cover {
 		margin-top: 3rem;

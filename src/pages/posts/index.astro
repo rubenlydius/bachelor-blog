@@ -5,6 +5,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getPosts } from '../../lib/posts';
 
 const posts = await getPosts();
+// Every tag used in a post, alphabetically
+const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
 ---
 
 <BaseLayout title={`Posts · ${SITE_TITLE}`} description="All posts documenting the project.">
@@ -13,6 +15,67 @@ const posts = await getPosts();
 			<h1>Posts</h1>
 			<p class="lead">Weekly updates on research, process and progress.</p>
 		</header>
+
+		{tags.length > 0 && (
+			<nav class="filters mono" aria-label="Filter posts by tag">
+				<button type="button" class="pill" data-filter="" aria-pressed="true">all</button>
+				{tags.map((tag) => (
+					<button type="button" class="pill" data-filter={tag} aria-pressed="false">
+						{tag}
+					</button>
+				))}
+			</nav>
+		)}
+
 		<PostList posts={posts} />
 	</div>
 </BaseLayout>
+
+<script>
+	// Filters the post list in the browser; the active tag is kept in the URL (?tag=ux) so it can be shared.
+	const buttons = document.querySelectorAll<HTMLButtonElement>('.filters button');
+	const items = document.querySelectorAll<HTMLElement>('.post-list > li');
+
+	function apply(tag: string) {
+		for (const button of buttons) {
+			button.setAttribute('aria-pressed', String(button.dataset.filter === tag));
+		}
+		for (const item of items) {
+			item.hidden = tag !== '' && !(item.dataset.tags ?? '').split('|').includes(tag);
+		}
+		const url = new URL(location.href);
+		if (tag) url.searchParams.set('tag', tag);
+		else url.searchParams.delete('tag');
+		history.replaceState(null, '', url);
+	}
+
+	for (const button of buttons) {
+		button.addEventListener('click', () => apply(button.dataset.filter ?? ''));
+	}
+
+	const initial = new URLSearchParams(location.search).get('tag') ?? '';
+	if ([...buttons].some((button) => button.dataset.filter === initial)) apply(initial);
+</script>
+
+<style>
+	.filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: 3rem;
+	}
+	/* Same treatment as the header nav: outline marks the active filter */
+	button {
+		border-color: transparent;
+		background: none;
+		color: var(--color-text);
+		font-size: var(--text-small);
+		cursor: pointer;
+	}
+	button:hover {
+		border-color: var(--color-border);
+	}
+	button[aria-pressed='true'] {
+		border-color: var(--color-text);
+	}
+</style>

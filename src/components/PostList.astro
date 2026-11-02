@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import { getMember } from '../data/team';
 import FormattedDate from './FormattedDate.astro';
 
 interface Props {
@@ -12,7 +13,7 @@ const { posts } = Astro.props;
 
 <ul class="post-list">
 	{posts.map((post) => (
-		<li>
+		<li data-tags={post.data.tags.join('|')}>
 			<a href={`/posts/${post.id}/`}>
 				{post.data.cover ? (
 					<Image src={post.data.cover} alt={post.data.coverAlt} width={720} />
@@ -23,6 +24,7 @@ const { posts } = Astro.props;
 				<p class="description">{post.data.description}</p>
 				<p class="meta mono">
 					<FormattedDate date={post.data.date} />
+					{post.data.author && <span>{getMember(post.data.author).name}</span>}
 					{post.data.draft && <span class="pill">draft</span>}
 				</p>
 			</a>
@@ -74,9 +76,11 @@ const { posts } = Astro.props;
 	}
 	.meta {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
-		gap: 0.75rem;
+		gap: 0.25rem 0.75rem;
 		margin: 0;
+		white-space: nowrap;
 	}
 	.pill {
 		color: var(--color-text);

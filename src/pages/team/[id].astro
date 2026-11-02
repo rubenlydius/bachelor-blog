@@ -1,0 +1,179 @@
+---
+import FormattedDate from '../../components/FormattedDate.astro';
+import HoursBar from '../../components/HoursBar.astro';
+import MemberPhoto from '../../components/MemberPhoto.astro';
+import PostList from '../../components/PostList.astro';
+import { SITE_TITLE } from '../../consts';
+import { formatHours, totalHours } from '../../data/pillars';
+import { type TeamMember, team } from '../../data/team';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPosts } from '../../lib/posts';
+import { getTimeByMember } from '../../lib/time';
+
+export function getStaticPaths() {
+	return team.map((member) => ({ params: { id: member.id }, props: { member } }));
+}
+
+interface Props {
+	member: TeamMember;
+}
+
+const { member } = Astro.props;
+const time = (await getTimeByMember())[member.id];
+const total = totalHours(time.total);
+const maxWeek = Math.max(...time.weeks.map((week) => totalHours(week.hours)), 1);
+const posts = (await getPosts()).filter((post) => post.data.author === member.id);
+const firstName = member.name.split(' ')[0];
+---
+
+<BaseLayout title={`${member.name} · ${SITE_TITLE}`} description={`${member.name}, ${member.role}.`}>
+	<div class="container">
+		<a class="pill back" href="/team/">
+			<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M10 6H2M5.5 2.5 2 6l3.5 3.5" /></svg>
+			Team
+		</a>
+		<header class="profile">
+			<div class="photo">
+				<MemberPhoto member={member} />
+			</div>
+			<div class="intro">
+				<h1>{member.name}</h1>
+				<p class="role">
+					<span class="node"></span>
+					{member.role}
+				</p>
+				<p>{member.bio}</p>
+				{member.links && (
+					<ul class="links">
+						{member.links.map((link) => (
+							<li>
+								<a class="pill" href={link.href}>{link.label}</a>
+							</li>
+						))}
+					</ul>
+				)}
+			</div>
+		</header>
+
+		<section class="section">
+			<div class="section-header">
+				<h2 class="section-title"><span class="node"></span>Time spent</h2>
+				<strong class="big-total">{formatHours(total)}</strong>
+			</div>
+			<HoursBar hours={time.total} />
+
+			{time.weeks.length > 0 && (
+				<ol class="weeks">
+					{time.weeks.map(({ post, hours }) => (
+						<li>
+							<div class="week-header">
+								<a href={`/posts/${post.id}/`}>{post.data.title}</a>
+								<span class="mono">
+									<FormattedDate date={post.data.date} /> · {formatHours(totalHours(hours))}
+								</span>
+							</div>
+							<HoursBar hours={hours} max={maxWeek} />
+						</li>
+					))}
+				</ol>
+			)}
+		</section>
+
+		{posts.length > 0 && (
+			<section class="section">
+				<h2 class="section-title posts-title"><span class="node"></span>Posts by {firstName}</h2>
+				<PostList posts={posts} />
+			</section>
+		)}
+	</div>
+</BaseLayout>
+
+<style>
+	.profile {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+		gap: 3rem;
+		align-items: end;
+		margin-block: 2.5rem 4rem;
+	}
+	.back {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		margin-top: 2rem;
+	}
+	.back svg {
+		width: 0.85em;
+		height: 0.85em;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.25;
+	}
+	.intro h1 {
+		margin-bottom: 1.25rem;
+	}
+	.role {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		margin-bottom: 1rem;
+		padding-bottom: 0.75rem;
+		border-bottom: 1px solid var(--color-line);
+		font-family: var(--font-mono);
+		font-size: var(--text-small);
+	}
+	.links {
+		display: flex;
+		gap: 0.5rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.section-header {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		margin-bottom: 1.25rem;
+	}
+	.big-total {
+		font-family: var(--font-display);
+		font-size: 2.5rem;
+		font-weight: 400;
+		letter-spacing: var(--tracking-display);
+	}
+	.weeks {
+		display: grid;
+		gap: 1.75rem;
+		margin: 3rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.week-header {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.25rem 1rem;
+		margin-bottom: 0.5rem;
+	}
+	.week-header a {
+		color: var(--color-text);
+		font-weight: 700;
+		text-decoration: none;
+	}
+	.week-header a:hover {
+		text-decoration: underline;
+	}
+	.posts-title {
+		margin-bottom: 2.5rem;
+	}
+	@media (max-width: 720px) {
+		.profile {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+		.photo {
+			max-width: 16rem;
+		}
+	}
+</style>

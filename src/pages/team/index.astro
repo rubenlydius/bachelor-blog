@@ -1,0 +1,92 @@
+---
+import HoursBar from '../../components/HoursBar.astro';
+import MemberPhoto from '../../components/MemberPhoto.astro';
+import { SITE_TITLE } from '../../consts';
+import { formatHours, totalHours } from '../../data/pillars';
+import { team } from '../../data/team';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getTimeByMember } from '../../lib/time';
+
+const time = await getTimeByMember();
+const max = Math.max(...team.map((member) => totalHours(time[member.id].total)), 1);
+---
+
+<BaseLayout title={`Team · ${SITE_TITLE}`} description="The people behind the project.">
+	<div class="container">
+		<header class="page-header">
+			<h1>The team</h1>
+			<p class="lead">[Placeholder] A sentence about who we are and how we work together.</p>
+		</header>
+
+		<ul class="team">
+			{team.map((member) => (
+				<li>
+					<a class="profile-link" href={`/team/${member.id}/`}>
+						<MemberPhoto member={member} />
+						<h2>{member.name}</h2>
+					</a>
+					<p class="role">
+						<span class="node"></span>
+						{member.role}
+					</p>
+					<p>{member.bio}</p>
+					<div class="time">
+						<p class="time-total">
+							<span class="mono">Time spent</span>
+							<strong>{formatHours(totalHours(time[member.id].total))}</strong>
+						</p>
+						<HoursBar hours={time[member.id].total} max={max} />
+					</div>
+				</li>
+			))}
+		</ul>
+	</div>
+</BaseLayout>
+
+<style>
+	.team {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+		gap: 3.5rem 2rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.profile-link {
+		display: block;
+		color: inherit;
+		text-decoration: none;
+	}
+	.profile-link h2 {
+		margin: 1.25rem 0 0.35em;
+		font-size: 1.375rem;
+	}
+	.profile-link:hover h2 {
+		text-decoration: underline;
+	}
+	.role {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		margin-bottom: 1rem;
+		padding-bottom: 0.75rem;
+		border-bottom: 1px solid var(--color-line);
+		font-family: var(--font-mono);
+		font-size: var(--text-small);
+	}
+	.time {
+		margin-top: 1.5rem;
+	}
+	.time-total {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		margin-bottom: 0.5rem;
+	}
+	.time-total strong {
+		font-family: var(--font-display);
+		font-size: 1.375rem;
+		font-weight: 400;
+		letter-spacing: var(--tracking-display);
+	}
+</style>

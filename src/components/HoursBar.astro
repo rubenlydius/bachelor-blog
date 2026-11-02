@@ -1,0 +1,83 @@
+---
+import { formatHours, type Hours, pillars, totalHours } from '../data/pillars';
+
+interface Props {
+	hours: Hours;
+	/** Hours that fill the full width; pass the largest total in a group so bars compare */
+	max?: number;
+}
+
+const { hours, max } = Astro.props;
+const total = totalHours(hours);
+const width = max ? (total / max) * 100 : 100;
+---
+
+<div class="hours">
+	{total > 0 ? (
+		<div class="bar" style={`width: ${width}%`} aria-hidden="true">
+			{pillars.map(
+				(pillar) =>
+					hours[pillar.id] > 0 && (
+						<span
+							class="segment"
+							style={`flex-grow: ${hours[pillar.id]}; background: ${pillar.color}`}
+							title={`${pillar.label}: ${formatHours(hours[pillar.id])}`}
+						/>
+					),
+			)}
+		</div>
+	) : (
+		<div class="bar empty" aria-hidden="true" />
+	)}
+	<!-- Values double as legend and as the accessible text version of the bar -->
+	<ul class="values mono">
+		{pillars.map((pillar) => (
+			<li>
+				<span class="swatch" style={`background: ${pillar.color}`} />
+				{pillar.label} <strong>{formatHours(hours[pillar.id])}</strong>
+			</li>
+		))}
+	</ul>
+</div>
+
+<style>
+	.bar {
+		display: flex;
+		gap: 2px; /* surface gap between segments */
+		height: 1rem;
+		min-width: 4px;
+	}
+	.bar.empty {
+		width: 100%;
+		background: var(--color-border);
+	}
+	.segment {
+		min-width: 2px;
+	}
+	/* Square at the baseline, rounded at the data end */
+	.segment:last-child {
+		border-radius: 0 4px 4px 0;
+	}
+	.values {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 1.25rem;
+		margin: 0.6rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.values li {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+	.swatch {
+		width: 0.625rem;
+		height: 0.625rem;
+		border-radius: 2px;
+	}
+	strong {
+		color: var(--color-text);
+		font-weight: 500;
+	}
+</style>
