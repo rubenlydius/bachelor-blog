@@ -11,14 +11,19 @@ export interface TeamMember {
 
 export const team: TeamMember[] = [
 	{
-		name: 'Ruben Vansteenberghe',
-		role: '[Role]',
-		bio: '[Placeholder] A short bio and what you focus on within the project.',
-		links: [{ label: 'Email', href: 'mailto:ruben.vansteenberghe@gmail.com' }],
+		name: 'Elitsa Kutsarova',
+		role: 'Experience Design',
+		bio: '[Placeholder] A short bio and their focus within the project.',
 	},
 	{
-		name: '[Team member]',
-		role: '[Role]',
-		bio: '[Placeholder] A short bio and what they focus on within the project.',
+		name: 'Miriam Botanská',
+		role: 'Visual Design',
+		bio: '[Placeholder] A short bio and their focus within the project.',
+	},
+	{
+		name: 'Ruben Van Steenberghe',
+		role: 'Development',
+		bio: '[Placeholder] A short bio and what you focus on within the project.',
+		links: [{ label: 'Email', href: 'mailto:ruben.vansteenberghe@gmail.com' }],
 	},
 ];

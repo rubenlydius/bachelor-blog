@@ -115,6 +115,10 @@ hr {
 	width: min(var(--width-content), 100% - 2 * var(--gutter));
 	margin-inline: auto;
 }
+.post-body > .wide,
+.post-body > .full {
+	max-width: none;
+}
 .post-body > .wide {
 	--w: min(var(--width-wide), 100vw - 2 * var(--gutter));
 	width: var(--w);
