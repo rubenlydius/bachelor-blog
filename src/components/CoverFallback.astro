@@ -1,0 +1,24 @@
+---
+// Shown instead of a cover image when a post has none: the logo centered on black.
+// Fills its parent, so the parent decides size, ratio and corners.
+import Logo from '../assets/logo.svg';
+---
+
+<div class="cover-fallback" aria-hidden="true">
+	<Logo />
+</div>
+
+<style>
+	.cover-fallback {
+		display: grid;
+		place-items: center;
+		width: 100%;
+		height: 100%;
+		background: var(--color-text);
+		color: var(--color-accent);
+	}
+	.cover-fallback :global(svg) {
+		width: auto;
+		height: 30%;
+	}
+</style>

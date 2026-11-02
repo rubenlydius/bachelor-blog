@@ -1,0 +1,25 @@
+---
+title: Making the blog
+description: A quick look at the structure behind this site.
+date: 2026-11-02
+author: ruben
+tags: [development]
+---
+
+## Astro + MDX
+
+I made this site with [Astro](https://astro.build), every post is an MDX file: plain Markdown for the text, with the option to drop in custom components wherever a post needs more than words.
+
+A few small components handle the layout inside posts: images that float next to the text or break out wide, rows of images, text next to an image, and statements like the one below.
+
+<Breakout>Hello, world_</Breakout>
+
+Later, if more complicated blog post pages are needed, this can be done with `.astro` files too, but there still needs to be an MDX file for the tag filter to pick up the post. So it's just an MDX file with the frontmatter, and the `.astro` page takes care of the rest.
+
+## Built for our process
+
+Each post has an author and tags (ux, design, development), so you can filter posts on the posts page. Once a week we publish a time post with the hours each of us spent per pillar. Those hours add up automatically on the team page and on each profile.
+
+## Hosting
+
+The site is static and hosted on GitHub Pages. Every push to the main branch in the repository rebuilds and publishes it, so writing a post is as simple as adding a file.

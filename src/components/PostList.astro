@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import { getMember } from '../data/team';
 import { url } from '../lib/url';
+import CoverFallback from './CoverFallback.astro';
 import FormattedDate from './FormattedDate.astro';
 
 interface Props {
@@ -19,7 +20,9 @@ const { posts } = Astro.props;
 				{post.data.cover ? (
 					<Image src={post.data.cover} alt={post.data.coverAlt} width={720} />
 				) : (
-					<div class="no-cover" />
+					<div class="no-cover">
+						<CoverFallback />
+					</div>
 				)}
 				<h3>{post.data.title}</h3>
 				<p class="description">{post.data.description}</p>
@@ -28,6 +31,11 @@ const { posts } = Astro.props;
 					{post.data.author && <span>{getMember(post.data.author).name}</span>}
 					{post.data.draft && <span class="pill">draft</span>}
 				</p>
+				{post.data.tags.length > 0 && (
+					<p class="tags mono">
+						{post.data.tags.map((tag) => <span class="pill">{tag}</span>)}
+					</p>
+				)}
 			</a>
 		</li>
 	))}
@@ -57,7 +65,7 @@ const { posts } = Astro.props;
 		transition: border-radius 0.4s ease;
 	}
 	.no-cover {
-		background: var(--color-accent-bg);
+		overflow: hidden;
 	}
 	a:hover img,
 	a:hover .no-cover {
@@ -85,5 +93,11 @@ const { posts } = Astro.props;
 	}
 	.pill {
 		color: var(--color-text);
+	}
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin: 0.75rem 0 0;
 	}
 </style>
