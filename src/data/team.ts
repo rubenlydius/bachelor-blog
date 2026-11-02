@@ -30,7 +30,7 @@ export const team: TeamMember[] = [
 		name: 'Ruben Van Steenberghe',
 		role: 'Development',
 		bio: 'Developer of the team. I enjoy experimenting with different ideas and exploring the technical side of our project.',
-		// links: [{ label: 'Email', href: 'mailto:ruben.vansteenberghe@gmail.com' }],
+		links: [{ label: 'GitHub', href: 'https://github.com/rubenlydius' }],
 	},
 ];
 

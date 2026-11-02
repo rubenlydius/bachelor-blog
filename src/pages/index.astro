@@ -37,7 +37,10 @@ const latest = (await getPosts()).slice(0, 3);
 			<section class="section">
 				<div class="latest-header">
 					<h2 class="section-title"><span class="node"></span>Latest posts</h2>
-					<a class="pill" href={url('/posts/')}>All posts →</a>
+					<a class="pill all-posts" href={url('/posts/')}>
+						All posts
+						<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5" /></svg>
+					</a>
 				</div>
 				<PostList posts={latest} />
 			</section>
@@ -64,6 +67,18 @@ const latest = (await getPosts()).slice(0, 3);
 		align-items: center;
 		justify-content: space-between;
 		margin-bottom: 2.5rem;
+	}
+	.all-posts {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+	}
+	.all-posts svg {
+		width: 0.85em;
+		height: 0.85em;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.25;
 	}
 	@media (max-width: 720px) {
 		.split {

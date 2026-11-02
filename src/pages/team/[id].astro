@@ -48,7 +48,7 @@ const firstName = member.name.split(' ')[0];
 					<ul class="links">
 						{member.links.map((link) => (
 							<li>
-								<a class="pill" href={link.href}>{link.label}</a>
+								<a class="pill" href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
 							</li>
 						))}
 					</ul>
