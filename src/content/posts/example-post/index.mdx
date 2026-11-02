@@ -1,0 +1,63 @@
+---
+title: Example post
+description: A reference post showing every layout component.
+date: 2026-11-02
+cover: ./cover.jpg
+coverAlt: Placeholder cover
+tags: [example, reference]
+draft: true
+---
+import photo1 from './photo-1.jpg';
+import photo2 from './photo-2.jpg';
+import photo3 from './photo-3.jpg';
+
+Regular paragraphs are plain markdown. **Bold**, _italic_ and [links](https://astro.build) work as usual.
+Components (`Figure`, `Breakout`, `ImageRow`, `TwoColumn`) are available without importing them;
+only images need an import so Astro can optimize them.
+
+## Figure: right-aligned
+
+<Figure src={photo1} alt="Placeholder" align="right" caption="Text wraps around this image." />
+
+This paragraph flows around the floated image. On small screens the image drops to full width
+above the text. Use `align="left"` to put it on the other side. Lorem ipsum dolor sit amet,
+consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.
+
+<Breakout>This is a breakout sentence: larger, bolder, in a box.</Breakout>
+
+## Figure: wide and full
+
+<Figure src={photo2} alt="Placeholder" align="wide" caption="align='wide' breaks out of the text column." />
+
+<Figure src={photo3} alt="Placeholder" align="full" />
+
+## Image row
+
+<ImageRow>
+  <Figure src={photo1} alt="Placeholder" caption="One" />
+  <Figure src={photo2} alt="Placeholder" caption="Two" />
+  <Figure src={photo3} alt="Placeholder" caption="Three" />
+</ImageRow>
+
+## Two columns
+
+<TwoColumn src={photo2} alt="Placeholder" caption="Image left, text right.">
+
+### Text next to an image
+
+Markdown works inside components. Just leave a blank line after the opening tag and before the closing tag.
+
+</TwoColumn>
+
+<TwoColumn src={photo3} alt="Placeholder" reverse>
+
+Add `reverse` to swap sides.
+
+</TwoColumn>
+
+<Breakout variant="plain">A plain variant: big text, no box.</Breakout>
+
+That's it.

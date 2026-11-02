@@ -1,0 +1,68 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_TITLE } from '../consts';
+import BaseLayout from './BaseLayout.astro';
+
+type Props = CollectionEntry<'posts'>['data'];
+
+const { title, description, date, updated, cover, coverAlt, tags } = Astro.props;
+---
+
+<BaseLayout title={`${title} · ${SITE_TITLE}`} description={description} image={cover}>
+	<article>
+		<header class="post-header post-body">
+			<p class="meta">
+				<FormattedDate date={date} />
+				{updated && (
+					<span>
+						· updated <FormattedDate date={updated} />
+					</span>
+				)}
+			</p>
+			<h1>{title}</h1>
+			{tags.length > 0 && (
+				<ul class="tags">
+					{tags.map((tag) => <li>{tag}</li>)}
+				</ul>
+			)}
+			{cover && <Image class="wide cover" src={cover} alt={coverAlt} width={1600} priority />}
+		</header>
+
+		<div class="post-body">
+			<slot />
+		</div>
+	</article>
+</BaseLayout>
+
+<style>
+	.post-header {
+		margin-block: 3rem 2.5rem;
+	}
+	.meta {
+		margin-bottom: 0.5rem;
+		color: var(--color-muted);
+		font-size: 0.875rem;
+	}
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		font-size: 0.8125rem;
+	}
+	.tags li {
+		padding: 0.15em 0.6em;
+		border: 1px solid var(--color-border);
+		border-radius: 999px;
+		color: var(--color-muted);
+	}
+	.cover {
+		margin-top: 2.5rem;
+		width: 100%;
+		border-radius: var(--radius);
+	}
+</style>

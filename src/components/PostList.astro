@@ -1,0 +1,69 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+	posts: CollectionEntry<'posts'>[];
+}
+
+const { posts } = Astro.props;
+---
+
+<ul class="post-list">
+	{posts.map((post) => (
+		<li>
+			<a href={`/posts/${post.id}/`}>
+				{post.data.cover && <Image src={post.data.cover} alt={post.data.coverAlt} width={720} />}
+				<p class="date">
+					<FormattedDate date={post.data.date} />
+					{post.data.draft && <span class="draft">draft</span>}
+				</p>
+				<h3>{post.data.title}</h3>
+				<p class="description">{post.data.description}</p>
+			</a>
+		</li>
+	))}
+</ul>
+
+<style>
+	.post-list {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+		gap: 3rem 2rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+	img {
+		aspect-ratio: 16 / 10;
+		object-fit: cover;
+		margin-bottom: 1rem;
+		border-radius: var(--radius);
+	}
+	h3 {
+		margin: 0 0 0.25em;
+		font-size: 1.375rem;
+	}
+	a:hover h3 {
+		color: var(--color-accent);
+	}
+	.date,
+	.description {
+		margin: 0;
+		color: var(--color-muted);
+	}
+	.date {
+		font-size: 0.875rem;
+	}
+	.draft {
+		margin-left: 0.5em;
+		padding: 0 0.4em;
+		background: var(--color-accent-bg);
+		color: var(--color-accent);
+	}
+</style>

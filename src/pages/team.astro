@@ -1,0 +1,82 @@
+---
+import { Image } from 'astro:assets';
+import { SITE_TITLE } from '../consts';
+import { team } from '../data/team';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title={`Team · ${SITE_TITLE}`} description="The people behind the project.">
+	<div class="container">
+		<header class="page-header">
+			<h1>The team</h1>
+			<p class="lead">[Placeholder] A sentence about who we are and how we work together.</p>
+		</header>
+
+		<ul class="team">
+			{team.map((member) => (
+				<li>
+					{member.photo ? (
+						<Image class="photo" src={member.photo} alt={member.name} width={600} />
+					) : (
+						<div class="photo placeholder" aria-hidden="true">
+							{member.name.charAt(0)}
+						</div>
+					)}
+					<h2>{member.name}</h2>
+					<p class="role">{member.role}</p>
+					<p>{member.bio}</p>
+					{member.links && (
+						<ul class="links">
+							{member.links.map((link) => (
+								<li>
+									<a href={link.href}>{link.label}</a>
+								</li>
+							))}
+						</ul>
+					)}
+				</li>
+			))}
+		</ul>
+	</div>
+</BaseLayout>
+
+<style>
+	.team {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+		gap: 3rem 2rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.photo {
+		width: 100%;
+		aspect-ratio: 4 / 5;
+		object-fit: cover;
+		margin-bottom: 1rem;
+		border-radius: var(--radius);
+	}
+	.placeholder {
+		display: grid;
+		place-items: center;
+		background: var(--color-accent-bg);
+		color: var(--color-accent);
+		font-size: 4rem;
+		font-weight: 700;
+	}
+	h2 {
+		margin: 0;
+		font-size: 1.375rem;
+	}
+	.role {
+		margin-bottom: 0.75rem;
+		color: var(--color-muted);
+	}
+	.links {
+		display: flex;
+		gap: 1rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+</style>

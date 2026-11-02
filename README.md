@@ -1,63 +1,55 @@
-# Astro Starter Kit: Blog
+# Bachelor Blog
 
-```sh
-npm create astro@latest -- --template blog
+Astro + MDX blog. Run `npm run dev` and open http://localhost:4321.
+
+## Writing a post
+
+Create a folder per post with an `index.mdx` and its images:
+
+```
+src/content/posts/
+  week-1-research/
+    index.mdx       → /posts/week-1-research/
+    cover.jpg
+    sketch.jpg
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Frontmatter (validated in `src/content.config.ts`):
 
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+```yaml
+---
+title: Week 1: Research
+description: Short summary for the overview and SEO.
+date: 2026-11-02
+cover: ./cover.jpg      # optional
+coverAlt: ...           # optional
+tags: [research]        # optional
+draft: true             # optional, drafts only show in dev
+---
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Layout components
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Available in every post without importing (registered in `src/components/post/index.ts`).
+Import images at the top of the post so Astro optimizes them: `import sketch from './sketch.jpg';`
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+| Component | Usage |
+|---|---|
+| `Figure` | `<Figure src={sketch} alt="..." caption="..." align="center \| left \| right \| wide \| full" />` |
+| `Breakout` | `<Breakout>Big statement.</Breakout>` · `variant="plain"` for no box · `wide` |
+| `ImageRow` | `<ImageRow><Figure .../><Figure .../></ImageRow>` · `columns={3}` · `wide` |
+| `TwoColumn` | `<TwoColumn src={img} alt="..." reverse>` markdown text `</TwoColumn>` (blank lines around the text) |
 
-Any static assets, like images, can be placed in the `public/` directory.
+See `src/content/posts/example-post/index.mdx` for every component in use.
 
-## 🧞 Commands
+## Structure
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+```
+src/
+  components/post/   layout components used in posts
+  content/posts/     the posts
+  layouts/           BaseLayout (shell), PostLayout (post header + column)
+  lib/posts.ts       getPosts(): sorted, drafts hidden in production
+  pages/             index (overview), posts/[...slug], rss.xml
+  styles/global.css  design tokens (colors, widths) + post column
+```

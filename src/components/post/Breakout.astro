@@ -1,0 +1,33 @@
+---
+interface Props {
+	/** accent: colored box · plain: large text without box */
+	variant?: 'accent' | 'plain';
+	/** wide: breaks out of the text column */
+	wide?: boolean;
+}
+
+const { variant = 'accent', wide = false } = Astro.props;
+---
+
+<aside class:list={['breakout', variant, { wide }]}>
+	<slot />
+</aside>
+
+<style>
+	.breakout {
+		clear: both;
+		margin: 3rem 0;
+		font-size: clamp(1.375rem, 3vw, 1.875rem);
+		font-weight: 700;
+		line-height: 1.3;
+	}
+	.accent {
+		padding: 1.5rem 2rem;
+		background: var(--color-accent-bg);
+		border: 2px solid var(--color-accent);
+		border-radius: var(--radius);
+	}
+	.breakout :global(p) {
+		margin: 0;
+	}
+</style>
