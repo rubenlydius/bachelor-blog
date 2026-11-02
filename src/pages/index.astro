@@ -1,6 +1,8 @@
 ---
 import PostList from '../components/PostList.astro';
+import Timeline from '../components/Timeline.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { timeline } from '../data/timeline';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getPosts } from '../lib/posts';
 
@@ -24,14 +26,9 @@ const latest = (await getPosts()).slice(0, 3);
 			</div>
 		</section>
 
-		<section class="split">
-			<h2>The goal</h2>
-			<div>
-				<p>
-					[Placeholder] The problem we are tackling, who it is for, and what we want to deliver
-					by the end of the semester.
-				</p>
-			</div>
+		<section class="timeline-section">
+			<h2>Timeline</h2>
+			<Timeline events={timeline} />
 		</section>
 
 		{latest.length > 0 && (
@@ -60,6 +57,14 @@ const latest = (await getPosts()).slice(0, 3);
 	}
 	.split p:last-child {
 		margin-bottom: 0;
+	}
+	.timeline-section {
+		padding-block: 2.5rem;
+		border-top: 1px solid var(--color-border);
+	}
+	.timeline-section h2 {
+		margin: 0 0 1rem;
+		font-size: 1.375rem;
 	}
 	.latest {
 		padding-top: 2.5rem;
