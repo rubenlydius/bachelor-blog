@@ -1,0 +1,84 @@
+---
+interface Props {
+	/** Figma/FigJam share link. Use "Copy link to selection" so it opens zoomed on that section (node-id) */
+	src: string;
+	/** Section to open on (still pannable), e.g. "12-345" from a "Copy link to selection" link */
+	node?: string;
+	/** Accessible name for the iframe */
+	title: string;
+	caption?: string;
+	/** Same options as Figure */
+	align?: 'center' | 'left' | 'right' | 'wide' | 'full';
+	/** Width / height of the frame, e.g. "16 / 9" */
+	ratio?: string;
+}
+
+const { src, node, title, caption, align = 'center', ratio = '16 / 10' } = Astro.props;
+
+// figma.com/board/KEY/Name?node-id=1-2 → embed.figma.com/board/KEY/Name?node-id=1-2&embed-host=share
+const embed = new URL(src);
+embed.hostname = 'embed.figma.com';
+if (node) embed.searchParams.set('node-id', node);
+embed.searchParams.set('embed-host', 'share');
+embed.searchParams.set('footer', 'false');
+---
+
+<figure class:list={['figma', align]}>
+	<iframe src={embed.href} title={title} style={`aspect-ratio: ${ratio}`} loading="lazy" allowfullscreen></iframe>
+	{caption && <figcaption class="mono">{caption}</figcaption>}
+</figure>
+
+<style>
+	.figma {
+		margin: 2.5rem 0;
+	}
+	iframe {
+		display: block;
+		width: 100%;
+		border: 1px solid var(--color-line);
+		border-radius: var(--radius);
+	}
+	.full iframe {
+		border-inline: 0;
+		border-radius: 0;
+	}
+	figcaption {
+		display: flex;
+		gap: 0.6rem;
+		margin-top: 0.6rem;
+		line-height: 1.4;
+	}
+	figcaption::before {
+		content: '';
+		flex: none;
+		width: 1.25rem;
+		height: 1px;
+		margin-top: 0.65em;
+		background: var(--color-line);
+	}
+	.full figcaption {
+		padding-inline: var(--gutter);
+	}
+	.left,
+	.right {
+		width: 50%;
+		margin-top: 0.35rem;
+		margin-bottom: 1rem;
+	}
+	.left {
+		float: left;
+		margin-right: 1.75rem;
+	}
+	.right {
+		float: right;
+		margin-left: 1.75rem;
+	}
+	@media (max-width: 640px) {
+		.left,
+		.right {
+			float: none;
+			width: 100%;
+			margin: 2rem 0;
+		}
+	}
+</style>
