@@ -20,8 +20,9 @@ const latest = (await getPosts()).slice(0, 3);
 			<h2 class="section-title"><span class="node"></span>About this blog</h2>
 			<div>
 				<p>
-					[Placeholder] What this blog is: a log of our bachelor project where we document
-					research, decisions, prototypes and lessons learned along the way.
+					We're Elitsa, Miriam and Ruben, working on our bachelor project <strong>Breathe Back to Light </strong>
+					for Transfo Intiem. Here we keep track of our process: what we're working on, how we tackle
+					it, and what we learn along the way.
 				</p>
 			</div>
 		</section>
@@ -48,6 +49,11 @@ const latest = (await getPosts()).slice(0, 3);
 		display: grid;
 		grid-template-columns: 1fr 2fr;
 		gap: 2rem;
+		align-items: start;
+	}
+	/* Same line height as the text's first line, so the title lines up with it */
+	.split .section-title {
+		line-height: calc(var(--text-base) * var(--leading));
 	}
 	.split p:last-child {
 		margin-bottom: 0;

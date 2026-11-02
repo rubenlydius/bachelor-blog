@@ -29,8 +29,8 @@ export const team: TeamMember[] = [
 		id: 'ruben',
 		name: 'Ruben Van Steenberghe',
 		role: 'Development',
-		bio: '[Placeholder] A short bio and what you focus on within the project.',
-		links: [{ label: 'Email', href: 'mailto:ruben.vansteenberghe@gmail.com' }],
+		bio: 'Developer of the team. I enjoy experimenting with different ideas and exploring the technical side of our project.',
+		// links: [{ label: 'Email', href: 'mailto:ruben.vansteenberghe@gmail.com' }],
 	},
 ];
 
