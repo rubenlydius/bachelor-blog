@@ -5,5 +5,7 @@ import Figure from './Figure.astro';
 import ImageRow from './ImageRow.astro';
 import Note from './Note.astro';
 import TwoColumn from './TwoColumn.astro';
+import Video from './Video.astro';
+import YouTube from './YouTube.astro';
 
-export const postComponents = { Breakout, FigmaEmbed, Figure, ImageRow, Note, TwoColumn };
+export const postComponents = { Breakout, FigmaEmbed, Figure, ImageRow, Note, TwoColumn, Video, YouTube };

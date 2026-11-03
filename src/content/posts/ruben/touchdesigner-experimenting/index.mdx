@@ -1,0 +1,53 @@
+---
+title: TouchDesigner experimenting
+description: Is TouchDesigner a good fit for our installation? Licenses, projectors, hand tracking and building with AI.
+date: 2026-11-03
+author: ruben
+tags: [development]
+draft: true
+---
+import tutorialImg from './img-td.png';
+import embodySimple from './pt1.mp4';
+import embodyComplex from './pt2.mp4';
+
+Once our concept started heading in a clear direction, TouchDesigner quickly came up. It's the go-to tool for interactive installations, so I started looking into what it could do for us. My first impression wasn't very hopeful: the licenses looked expensive, it seemed to need a heavy computer, none of us are used to node-based software, and, most importantly, none of us had ever used TouchDesigner before.
+
+## Licenses and projectors
+
+After more research, it turned out to be possible after all. Since this is an unpaid school project shown at a free event, the free non-commercial license is allowed. Its main limit is a maximum resolution of 1280×1280 pixels. Whether that's enough depends on the projectors, so I went through the list the client might have for us:
+
+- 4× Epson EB-L260F (~4600 lumen, laser, 1080p)
+- 3× Optoma EH460ST (~4200 lumen, short throw, 1080p)
+- 1× projector, 4000 lumen
+- 1× projector, 3200 lumen
+- 3× projectors, 3000 lumen
+
+Our original plan was to project onto a single wall of about 12.8 m. After a meeting with the other teams, that wall will be slightly shorter, but we'll also project onto the sides of the curtain dividers, wrapping the projection around the visitors for a more immersive, interactive experience. The exact width of each surface depends on how we place the curtains and which projectors the client can give us.
+
+That means several projectors, which is where the free license becomes a problem again: either the 1280-pixel canvas gets stretched across all the surfaces, or we need a separate computer per projector. Performance is another question, since we'd be running it on Macs, and my MacBook Air has no fan.
+
+## First steps
+
+To get a feel for the software itself, I followed this <a href="https://youtu.be/qbupHTeJCeU" target="_blank" rel="noopener noreferrer">beginner tutorial</a>.
+
+<Figure src={tutorialImg} alt="TouchDesigner network from the beginner tutorial, with a red and blue gradient circle as output" caption="The network from the beginner tutorial." align="wide" />
+
+Since our installation needs some form of camera tracking, I also watched a <a href="https://youtu.be/om4VRC4TU_o" target="_blank" rel="noopener noreferrer">tutorial on finger tracking</a> in TouchDesigner. It uses the <a href="https://github.com/torinmb/mediapipe-touchdesigner" target="_blank" rel="noopener noreferrer">MediaPipe TouchDesigner plugin</a>, which tracks hands, faces and bodies from a regular webcam.
+
+<YouTube id="om4VRC4TU_o" title="Finger tracking in TouchDesigner with MediaPipe, tutorial" align="wide" />
+
+## Building with AI: Embody
+
+Then I found <a href="https://github.com/dylanroscover/Embody" target="_blank" rel="noopener noreferrer">Embody</a>, a tool that connects Claude Code to TouchDesigner so you can build networks by describing what you want. Simple requests, like making a circle move, worked straight away. Next I gave it access to the MediaPipe plugin, and within a few minutes it had built a working network: a simple shape drawn between my index finger and thumb.
+
+<Video src={embodySimple} title="A grey rectangle drawn between my thumbs and index fingers, following my hands on the webcam" caption="My first network built with Embody." align="wide" loop />
+
+To challenge it, I asked for something more complex: track my whole hand and face and outline them with thin rectangles, put a blue gradient map with a CRT-like effect over the camera image, and let the distance between my thumb and index finger shift the gradient from blue to red. To my surprise, it did this fairly accurately. It wasn't exactly what I had pictured, but it matched the prompt very well.
+
+<Video src={embodyComplex} title="Hand and face tracking built with Embody: thin rectangles outline my hands and face over a blue gradient map with a CRT effect, shifting to red as thumb and index finger move apart" caption="The more complex network Embody built from my prompt." align="wide" loop />
+
+## Next steps
+
+Next I want to explore further what TouchDesigner can do for our installation and whether it's really a viable option. I'm also asking myself whether we should use tools like Embody at all, because it almost feels too easy. Then again, none of us know TouchDesigner, so a tool that lets us use it without spending weeks learning it first might be what we need.
+
+My laptop also got pretty hot running a fairly simple tracking project, so I want to compare it with a coded version. I'll build some demos in WebGPU and three.js that do something similar, and look at how hard they are to build and how easy they are to tweak. After that, we'll decide whether to code the installation or build it in TouchDesigner.

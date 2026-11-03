@@ -14,13 +14,15 @@ interface Props {
 
 const { src, alt, caption, align = 'center' } = Astro.props;
 const widths = { center: 900, left: 600, right: 600, wide: 1400, full: 2400 };
+// Aspect ratio, so an ImageRow can give every image in a row the same height
+const ratio = typeof src === 'string' ? undefined : `--ratio: ${src.width / src.height}`;
 ---
 
-<figure class:list={['figure', align]}>
+<figure class:list={['figure', align]} style={ratio}>
 	{typeof src === 'string' ? (
 		<img src={src.startsWith('/') ? url(src) : src} alt={alt} loading="lazy" />
 	) : (
-		<Image src={src} alt={alt} width={widths[align]} />
+		<Image src={src} alt={alt} width={widths[align]} format="avif" />
 	)}
 	{caption && <figcaption class="mono">{caption}</figcaption>}
 </figure>
