@@ -20,7 +20,7 @@ const { src, alt, caption, reverse = false, wide = false } = Astro.props;
 		{typeof src === 'string' ? (
 			<img src={src.startsWith('/') ? url(src) : src} alt={alt} loading="lazy" />
 		) : (
-			<Image src={src} alt={alt} width={900} />
+			<Image src={src} alt={alt} width={900} format="avif" />
 		)}
 		{caption && <figcaption class="mono">{caption}</figcaption>}
 	</figure>

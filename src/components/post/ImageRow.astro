@@ -1,6 +1,6 @@
 ---
 interface Props {
-	/** Number of columns (defaults to the number of images, auto-wraps on small screens) */
+	/** Number of equal columns. Without it, images share one row at the same height */
 	columns?: number;
 	wide?: boolean;
 }
@@ -8,17 +8,32 @@ interface Props {
 const { columns, wide = false } = Astro.props;
 ---
 
-<div class:list={['image-row', { wide }]} style={columns ? `--columns: ${columns}` : undefined}>
+<div class:list={['image-row', { wide, grid: columns }]} style={columns ? `--columns: ${columns}` : undefined}>
 	<slot />
 </div>
 
 <style>
 	.image-row {
-		display: grid;
-		grid-template-columns: repeat(var(--columns, auto-fit), minmax(0, 1fr));
+		display: flex;
 		gap: 1rem;
 		clear: both;
 		margin: 2.5rem 0;
+	}
+	/* Each item grows by its aspect ratio, so all images end up the same height */
+	.image-row > :global(*) {
+		flex: var(--ratio, 1) 1 0;
+		min-width: 0;
+	}
+	/* Rows right after each other sit as close as the images within a row */
+	.image-row:has(+ .image-row) {
+		margin-bottom: 1rem;
+	}
+	.image-row + .image-row {
+		margin-top: 1rem;
+	}
+	.image-row.grid {
+		display: grid;
+		grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
 	}
 	/* Figures inside a row ignore their own align/spacing */
 	.image-row > :global(.figure) {
@@ -28,6 +43,9 @@ const { columns, wide = false } = Astro.props;
 	}
 	@media (max-width: 640px) {
 		.image-row {
+			flex-direction: column;
+		}
+		.image-row.grid {
 			grid-template-columns: 1fr;
 		}
 	}
