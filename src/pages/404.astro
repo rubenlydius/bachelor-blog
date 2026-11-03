@@ -1,0 +1,69 @@
+---
+import { SITE_TITLE } from '../consts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../lib/url';
+---
+
+<BaseLayout title={`Page not found · ${SITE_TITLE}`} description="This page doesn't exist.">
+	<div class="container">
+		<section class="error">
+			<p class="code mono"><span class="node"></span>Error 404</p>
+			<h1>Lost in the dark</h1>
+			<p class="lead">The page you're looking for doesn't exist or has been moved.</p>
+			<div class="actions">
+				<a class="pill" href={url('/')}>
+					<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M10 6H2M5.5 2.5 2 6l3.5 3.5" /></svg>
+					Back home
+				</a>
+				<a class="pill" href={url('/posts/')}>
+					All posts
+					<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5" /></svg>
+				</a>
+			</div>
+		</section>
+	</div>
+</BaseLayout>
+
+<style>
+	.error {
+		min-height: 60vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding-block: 4rem;
+	}
+	.code {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6em;
+		color: var(--color-muted);
+		margin-bottom: 1.5rem;
+		margin-left: calc(0.167 * clamp(2.5rem, 6vw, 4.5rem));
+	}
+	.code .node {
+		background: var(--color-accent);
+	}
+	h1 {
+		margin-bottom: 1.5rem;
+	}
+	.lead {
+		margin-bottom: 2.5rem;
+	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+	.actions .pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+	}
+	.actions svg {
+		width: 0.85em;
+		height: 0.85em;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.25;
+	}
+</style>
