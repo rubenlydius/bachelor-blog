@@ -1,0 +1,39 @@
+---
+interface Props {
+	/** Imported video file, e.g. `import demo from './demo.mp4'` */
+	src: string;
+	/** Short description of what happens in the video */
+	title: string;
+	caption?: string;
+	/** Same options as Figure */
+	align?: 'center' | 'left' | 'right' | 'wide' | 'full';
+	/** Plays muted on loop like a gif, instead of with controls */
+	loop?: boolean;
+}
+
+const { src, title, caption, align = 'center', loop = false } = Astro.props;
+---
+
+<figure class:list={['figure', 'video', align]}>
+	{loop ? (
+		<video src={src} aria-label={title} autoplay muted loop playsinline preload="metadata"></video>
+	) : (
+		<video src={src} aria-label={title} controls playsinline preload="metadata"></video>
+	)}
+	{caption && <figcaption class="mono">{caption}</figcaption>}
+</figure>
+
+<style>
+	.figure {
+		margin: 2.5rem 0;
+	}
+	video {
+		display: block;
+		width: 100%;
+		border-radius: var(--radius);
+		background: var(--color-text);
+	}
+	figcaption {
+		margin-top: 0.6rem;
+	}
+</style>

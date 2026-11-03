@@ -1,0 +1,41 @@
+---
+interface Props {
+	/** Video id, e.g. "om4VRC4TU_o" from youtu.be/om4VRC4TU_o */
+	id: string;
+	/** Accessible name for the iframe */
+	title: string;
+	caption?: string;
+	/** Same options as Figure */
+	align?: 'center' | 'left' | 'right' | 'wide' | 'full';
+}
+
+const { id, title, caption, align = 'center' } = Astro.props;
+---
+
+<figure class:list={['figure', 'youtube', align]}>
+	<iframe
+		src={`https://www.youtube-nocookie.com/embed/${id}`}
+		title={title}
+		loading="lazy"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		referrerpolicy="strict-origin-when-cross-origin"
+		allowfullscreen
+	></iframe>
+	{caption && <figcaption class="mono">{caption}</figcaption>}
+</figure>
+
+<style>
+	.figure {
+		margin: 2.5rem 0;
+	}
+	iframe {
+		display: block;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		border: 0;
+		border-radius: var(--radius);
+	}
+	figcaption {
+		margin-top: 0.6rem;
+	}
+</style>
