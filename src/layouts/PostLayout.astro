@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import type { CollectionEntry } from 'astro:content';
+import { type CollectionEntry, getEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import TimeReport from '../components/TimeReport.astro';
 import { SITE_TITLE } from '../consts';
@@ -10,8 +10,14 @@ import BaseLayout from './BaseLayout.astro';
 
 type Props = CollectionEntry<'posts'>['data'];
 
-const { title, description, date, updated, author, cover, coverAlt, tags, time } = Astro.props;
+const { title, description, date, updated, author, cover, coverAlt, tags, time, prev, next } = Astro.props;
 const member = author && getMember(author);
+const prevPost = prev ? await getEntry('posts', prev) : undefined;
+const nextPost = next ? await getEntry('posts', next) : undefined;
+// The storyline's theme: the first tag this post shares with its neighbour
+const sharedTag = (other?: CollectionEntry<'posts'>) => other && tags.find((tag) => other.data.tags.includes(tag));
+const prevTag = sharedTag(prevPost);
+const nextTag = sharedTag(nextPost);
 ---
 
 <BaseLayout title={`${title} · ${SITE_TITLE}`} description={description} image={cover}>
@@ -41,6 +47,23 @@ const member = author && getMember(author);
 			{time && <TimeReport time={time} />}
 			<slot />
 		</div>
+
+		{(prevPost || nextPost) && (
+			<nav class="post-body pager" aria-label="More posts in this storyline">
+				{prevPost && (
+					<a class="pill" href={url(`/posts/${prevPost.id}/`)} rel="prev" title={prevPost.data.title}>
+						<svg class="back" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5" /></svg>
+						Previous {prevTag} article
+					</a>
+				)}
+				{nextPost && (
+					<a class="pill next" href={url(`/posts/${nextPost.id}/`)} rel="next" title={nextPost.data.title}>
+						Next {nextTag} article
+						<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5" /></svg>
+					</a>
+				)}
+			</nav>
+		)}
 	</article>
 </BaseLayout>
 
@@ -66,6 +89,30 @@ const member = author && getMember(author);
 	}
 	.author:hover {
 		text-decoration: underline;
+	}
+	.pager {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 4rem;
+	}
+	.pager .pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+	}
+	.pager .next {
+		margin-left: auto;
+	}
+	.pager svg {
+		width: 0.85em;
+		height: 0.85em;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.25;
+	}
+	.pager .back {
+		transform: scaleX(-1);
 	}
 	.cover {
 		margin-top: 3rem;

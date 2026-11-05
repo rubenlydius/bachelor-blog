@@ -38,6 +38,9 @@ const posts = defineCollection({
 				coverAlt: z.string().default(''),
 				tags: z.array(z.string().trim().toLowerCase()).default([]),
 				draft: z.boolean().default(false),
+				// Slugs of the neighbouring posts in a storyline, shown as buttons at the bottom of the post
+				prev: z.string().optional(),
+				next: z.string().optional(),
 				// Weekly time post: hours per member, e.g. `ruben: { ux: 2, development: 14 }`
 				time: z.partialRecord(member, hours).optional(),
 			})
