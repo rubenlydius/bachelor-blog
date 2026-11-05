@@ -16,7 +16,8 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
 			<p class="lead">Weekly updates on research, process and progress.</p>
 		</header>
 
-		{tags.length > 0 && (
+		<div class="toolbar">
+			{tags.length > 0 && (
 			<nav class="filters mono" aria-label="Filter posts by tag">
 				<button type="button" class="pill" data-filter="" aria-pressed="true">all</button>
 				{tags.map((tag) => (
@@ -25,7 +26,12 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
 					</button>
 				))}
 			</nav>
-		)}
+			)}
+			<button type="button" class="pill sort mono" aria-label="Sort order">
+				<span class="sort-label">newest first</span>
+				<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 2v8M2.5 6.5 6 10l3.5-3.5" /></svg>
+			</button>
+		</div>
 
 		<PostList posts={posts} />
 	</div>
@@ -53,16 +59,68 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
 		button.addEventListener('click', () => apply(button.dataset.filter ?? ''));
 	}
 
+	// Sort order: posts come newest first from the server, reversing the list flips it.
+	// Kept in the URL as ?sort=oldest.
+	const sortButton = document.querySelector<HTMLButtonElement>('.sort')!;
+	const list = document.querySelector<HTMLElement>('.post-list');
+	let oldestFirst = false;
+
+	function setSort(oldest: boolean) {
+		if (oldest !== oldestFirst && list) {
+			list.append(...[...list.children].reverse());
+		}
+		oldestFirst = oldest;
+		sortButton.classList.toggle('oldest', oldest);
+		sortButton.querySelector('.sort-label')!.textContent = oldest ? 'oldest first' : 'newest first';
+		const url = new URL(location.href);
+		if (oldest) url.searchParams.set('sort', 'oldest');
+		else url.searchParams.delete('sort');
+		history.replaceState(null, '', url);
+	}
+
+	sortButton.addEventListener('click', () => setSort(!oldestFirst));
+	if (new URLSearchParams(location.search).get('sort') === 'oldest') setSort(true);
+
 	const initial = new URLSearchParams(location.search).get('tag') ?? '';
 	if ([...buttons].some((button) => button.dataset.filter === initial)) apply(initial);
 </script>
 
 <style>
+	.toolbar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 3rem;
+	}
 	.filters {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.5rem;
-		margin-bottom: 3rem;
+	}
+	/* Always on the right, also when the filters are missing */
+	.sort {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		margin-left: auto;
+		border-color: var(--color-text);
+	}
+	.sort svg {
+		width: 0.85em;
+		height: 0.85em;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.25;
+		transition: transform 0.2s;
+	}
+	.sort.oldest svg {
+		transform: scaleY(-1);
+	}
+	.sort:hover {
+		background: var(--color-text);
+		color: var(--color-accent);
 	}
 	/* Same treatment as the header nav: outline marks the active filter */
 	button {

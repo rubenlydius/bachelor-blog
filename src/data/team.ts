@@ -17,13 +17,13 @@ export const team: TeamMember[] = [
 		id: 'elitsa',
 		name: 'Elitsa Kutsarova',
 		role: 'Experience Design',
-		bio: '[Placeholder] A short bio and their focus within the project.',
+		bio: 'UX designer of the team. I like digging into the problem first, with research and our target audience, so we understand who we are designing for.',
 	},
 	{
 		id: 'miriam',
 		name: 'Miriam Botanská',
 		role: 'Visual Design',
-		bio: '[Placeholder] A short bio and their focus within the project.',
+		bio: 'Visual designer of the team. I love getting to know a space up close and translating its atmosphere into the look and feel of our installation.',
 	},
 	{
 		id: 'ruben',

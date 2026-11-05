@@ -25,7 +25,7 @@ const format = (date: string) =>
 	<ol>
 		{events.map((event, i) => (
 			<li
-				class:list={['event', i % 2 ? 'above' : 'below']}
+				class:list={['event', i % 2 ? 'far' : 'near']}
 				style={`--pos: ${position(event.date)}%`}
 				data-time={time(event.date)}
 			>
@@ -62,8 +62,9 @@ const format = (date: string) =>
 		--progress: 0%;
 		--dot: 0.75rem;
 		position: relative;
-		/* room for labels above and below the bar */
-		padding-block: 4.5rem 4rem;
+		/* room for the today marker above the bar and two rows of labels below it */
+		--bar: 3rem; /* distance from the top to the bar */
+		padding-block: var(--bar) 7rem;
 		margin-inline: calc(var(--dot) / 2);
 	}
 	.track {
@@ -110,7 +111,8 @@ const format = (date: string) =>
 	}
 	.event {
 		position: absolute;
-		top: 50%;
+		/* on the bar, not the middle of the box (the padding is uneven) */
+		top: var(--bar);
 		left: var(--pos);
 	}
 	.dot {
@@ -134,11 +136,24 @@ const format = (date: string) =>
 		text-align: center;
 		white-space: nowrap;
 	}
-	.below .label {
+	/* Labels sit below the bar in two alternating rows, so close dates never collide
+	   and the space above stays free for the today marker */
+	.near .label {
 		top: 1.25rem;
 	}
-	.above .label {
-		bottom: 1.25rem;
+	.far .label {
+		top: 4.25rem;
+	}
+	/* Thin line from the dot down to a label in the far row */
+	.far::before {
+		content: '';
+		position: absolute;
+		top: calc(var(--dot) / 2);
+		left: 0;
+		width: 1px;
+		height: calc(4.25rem - var(--dot) / 2 - 0.25rem);
+		background: var(--color-border);
+		transform: translateX(-50%);
 	}
 	/* Keep the first and last labels inside the bar's edges */
 	.event:first-child .label {

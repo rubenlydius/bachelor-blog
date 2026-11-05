@@ -6,6 +6,10 @@ export interface TimelineEvent {
 // Sorted by date. The first and last event define the start and end of the bar.
 export const timeline: TimelineEvent[] = [
 	{ date: '2026-10-27', label: 'Brief' },
+	{ date: '2026-11-01', label: 'Pitch deck' },
+	{ date: '2026-11-20', label: 'Project pitch' },
+	{ date: '2026-11-23', label: 'Promo text' },
+	{ date: '2026-12-04', label: 'Test moment' },
 	{ date: '2026-12-12', label: 'Transfo Intiem' },
 	{ date: '2026-12-17', label: 'Jury' },
 ];
