@@ -1,0 +1,42 @@
+---
+title: A blog about the blog
+description: "Process: planning, writing and building our blog"
+date: 2026-11-01
+author: elitsa
+tags: [ux, development]
+draft: false
+next: blog-making
+---
+import { url as withBase } from '../../../lib/url';
+
+export const board = 'https://www.figma.com/board/OvVLzZy6et4hOgKfZRv6rX/bachelor';
+
+Part of this project is keeping a blog about our process. We wanted it to be more than a list of what we did each day, so before writing anything, we thought about how to set it up.
+
+## One post per step
+
+At first we thought about writing a post for every day, but that would end up as a lot of short posts that all say something along the lines of "today we did some research". Instead, we decided to write one post per step of our process: the briefing, the problem space definition, the user group definition, the research, ideation, our visit to Transfo, and so on. Every post gets a tag (UX, design or development), so you can filter on the part you are interested in. The hours we spend each day go into a separate time log, so the posts themselves can focus on what we did and why.
+
+<FigmaEmbed src={board} node="780-6496" title="Initial plan for the blog posts" caption="Our initial plan for the blog posts, subject to change." ratio="3 / 4" />
+
+## From board to post
+
+Next to every step on our FigJam board we placed a small yellow box that explains what we did and why. These boxes became the base for the posts. For each post we take the boxes of that step, add screenshots of the board with a short caption, and write it out in more detail. Every post follows the same structure: a short intro, a few blocks with their own subtitle, what we learned, and the next steps, so you can always see how one post leads to the next.
+
+## Hey Claude, how do we say this better?
+
+We used AI (Claude) to help us write the blog posts. Using the short explanations we already had for each step, we wrote drafts of the posts ourselves. We then asked Claude to suggest improvements where needed, mostly when we weren't sure how to explain something so that it made sense, or when something just sounded off. It also helped us with spelling and grammar checks. Claude was not allowed to change the posts on its own, it only suggested changes. That way we stayed in control and could check everything that made it into the final version of a post.
+
+## Coding the blog
+
+The blog itself is built by Ruben. Read more about how it was made:
+
+<a class="pill" href={withBase('/posts/blog-making/')}>Making the blog →</a>
+
+## What we learned
+
+Writing all the posts for a whole week afterwards was a lot of work at once. Having the yellow boxes on the board helped a lot, because most of the thinking was already written down. From now on we want to write each post within a few days after finishing a step, preferably right after, while everything is still fresh.
+
+## Next steps
+
+Keep writing one post per step, and keep the time log up to date every day. Next up: validating our concept and testing our first technical ideas.
