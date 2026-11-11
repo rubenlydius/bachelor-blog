@@ -1,27 +1,29 @@
 import type { CollectionEntry } from 'astro:content';
 import { type MemberId, memberIds } from '../data/members';
-import { emptyHours, type Hours, pillars } from '../data/pillars';
+import { type Hours, hoursFromTasks, mergeTasks, type Task } from '../data/pillars';
 import { getPosts } from './posts';
 
 export interface MemberTime {
 	total: Hours;
+	/** Every task across all weeks, same tasks combined */
+	tasks: Task[];
 	/** One entry per time post this member logged hours in, newest first */
-	weeks: { post: CollectionEntry<'posts'>; hours: Hours }[];
+	weeks: { post: CollectionEntry<'posts'>; hours: Hours; tasks: Task[] }[];
 }
 
-// Sums the hours from every time post, per member.
+// Sums the tasks from every time post, per member.
 export async function getTimeByMember(): Promise<Record<MemberId, MemberTime>> {
-	const result = Object.fromEntries(
-		memberIds.map((id) => [id, { total: emptyHours(), weeks: [] }]),
+	const posts = await getPosts();
+	return Object.fromEntries(
+		memberIds.map((id) => {
+			const weeks = posts
+				.filter((post) => post.data.time?.[id]?.length)
+				.map((post) => {
+					const tasks = mergeTasks(post.data.time![id]!);
+					return { post, hours: hoursFromTasks(tasks), tasks };
+				});
+			const tasks = mergeTasks(weeks.flatMap((week) => week.tasks));
+			return [id, { total: hoursFromTasks(tasks), tasks, weeks }];
+		}),
 	) as Record<MemberId, MemberTime>;
-
-	for (const post of await getPosts()) {
-		for (const id of memberIds) {
-			const hours = post.data.time?.[id];
-			if (!hours) continue;
-			result[id].weeks.push({ post, hours });
-			for (const pillar of pillars) result[id].total[pillar.id] += hours[pillar.id];
-		}
-	}
-	return result;
 }

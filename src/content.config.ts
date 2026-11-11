@@ -2,15 +2,19 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { memberIds } from './data/members';
+import { parseDuration, pillarIds } from './data/pillars';
 
 const member = z.enum(memberIds);
 
-// Hours per pillar for one member; missing pillars count as 0
-const hours = z.object({
-	ux: z.number().min(0).default(0),
-	design: z.number().min(0).default(0),
-	development: z.number().min(0).default(0),
-});
+// One logged task, e.g. `{ task: Research, pillar: ux, time: "2:22:24" }`.
+// `time` is h:mm, h:mm:ss or a number of hours.
+const task = z
+	.object({
+		task: z.string().trim().min(1),
+		pillar: z.enum(pillarIds),
+		time: z.union([z.number().min(0), z.string().regex(/^\d+:[0-5]\d(:[0-5]\d)?$/, 'use h:mm or h:mm:ss')]),
+	})
+	.transform(({ task, pillar, time }) => ({ task, pillar, hours: parseDuration(time) }));
 
 // Posts are grouped in folders (per author, time/), but the URL only uses the file name:
 // ruben/making-the-blog.mdx → /posts/making-the-blog/, some-post/index.mdx → /posts/some-post/.
@@ -38,8 +42,8 @@ const posts = defineCollection({
 				coverAlt: z.string().default(''),
 				tags: z.array(z.string().trim().toLowerCase()).default([]),
 				draft: z.boolean().default(false),
-				// Weekly time post: hours per member, e.g. `ruben: { ux: 2, development: 14 }`
-				time: z.partialRecord(member, hours).optional(),
+				// Weekly time post: the tasks each member worked on (see `task` above)
+				time: z.partialRecord(member, z.array(task)).optional(),
 			})
 			// A post with time data is always tagged "time"
 			.transform((data) =>

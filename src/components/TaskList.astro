@@ -1,0 +1,95 @@
+---
+import { formatDuration, getPillar, type Task } from '../data/pillars';
+
+interface Props {
+	/** Already merged and sorted (see mergeTasks) */
+	tasks: Task[];
+}
+
+const { tasks } = Astro.props;
+const max = Math.max(...tasks.map((task) => task.hours), 0.01);
+---
+
+<table class="tasks">
+	<thead class="visually-hidden">
+		<tr><th>Task</th><th>Pillar</th><th>Time</th></tr>
+	</thead>
+	<tbody>
+		{tasks.map((task) => {
+			const pillar = getPillar(task.pillar);
+			return (
+				<tr>
+					<td class="name">
+						{task.task}
+						<span class="meter" aria-hidden="true">
+							<span style={`width: ${(task.hours / max) * 100}%; background: ${pillar.color}`} />
+						</span>
+					</td>
+					<td class="pillar mono">
+						<span class="swatch" style={`background: ${pillar.color}`} />
+						{pillar.label}
+					</td>
+					<td class="time mono">{formatDuration(task.hours)}</td>
+				</tr>
+			);
+		})}
+	</tbody>
+</table>
+
+<style>
+	.tasks {
+		width: 100%;
+		margin: 1rem 0 0;
+		border-collapse: collapse;
+		font-size: var(--text-small);
+	}
+	td {
+		padding: 0.45rem 0;
+		border-top: 1px solid var(--color-line);
+		vertical-align: top;
+	}
+	.name {
+		width: 100%;
+		padding-right: 1rem;
+	}
+	/* Thin bar under the name, relative to the longest task in this list */
+	.meter {
+		display: block;
+		height: 3px;
+		margin-top: 0.35rem;
+	}
+	.meter span {
+		display: block;
+		height: 100%;
+		border-radius: 0 2px 2px 0;
+	}
+	.pillar {
+		padding-right: 1rem;
+		white-space: nowrap;
+	}
+	.swatch {
+		display: inline-block;
+		width: 0.625rem;
+		height: 0.625rem;
+		margin-right: 0.4rem;
+		border-radius: 2px;
+	}
+	.time {
+		color: var(--color-text);
+		text-align: right;
+		white-space: nowrap;
+	}
+	.visually-hidden {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+	@media (max-width: 520px) {
+		.pillar {
+			display: none;
+		}
+	}
+</style>
