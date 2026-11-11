@@ -17,4 +17,5 @@ export const readingOrder: string[] = [
 	'touchdesigner-experimenting',
 	'love-at-first-lily',
 	'low-poly-high-hopes',
+	'lights-camera-roots',
 ];
