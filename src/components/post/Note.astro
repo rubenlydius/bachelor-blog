@@ -2,12 +2,14 @@
 interface Props {
 	/** Shows a heart, e.g. for a HMW the team voted on */
 	liked?: boolean;
+	/** For longer text: normal weight, with space between paragraphs */
+	long?: boolean;
 }
 
-const { liked = false } = Astro.props;
+const { liked = false, long = false } = Astro.props;
 ---
 
-<aside class="note">
+<aside class:list={['note', { long }]}>
 	<slot />
 	{liked && <span class="heart" aria-label="Liked">♥</span>}
 </aside>
@@ -26,6 +28,14 @@ const { liked = false } = Astro.props;
 	}
 	.note :global(p) {
 		margin: 0;
+	}
+	.long {
+		padding: 1.75rem 2rem;
+		font-weight: 400;
+		line-height: 1.6;
+	}
+	.long :global(* + p) {
+		margin-top: 1em;
 	}
 	.heart {
 		position: absolute;

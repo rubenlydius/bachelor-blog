@@ -18,4 +18,5 @@ export const readingOrder: string[] = [
 	'love-at-first-lily',
 	'low-poly-high-hopes',
 	'lights-camera-roots',
+	'definitely-defined',
 ];
