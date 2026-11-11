@@ -38,11 +38,6 @@ const posts = defineCollection({
 				coverAlt: z.string().default(''),
 				tags: z.array(z.string().trim().toLowerCase()).default([]),
 				draft: z.boolean().default(false),
-				// Neighbouring posts in a storyline, shown as buttons at the bottom of the post.
-				// One slug (`next: blog-making`), or one per tag for a post in several storylines
-				// (`next: { ux: i-need-validation, development: blog-making }`).
-				prev: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
-				next: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
 				// Weekly time post: hours per member, e.g. `ruben: { ux: 2, development: 14 }`
 				time: z.partialRecord(member, hours).optional(),
 			})

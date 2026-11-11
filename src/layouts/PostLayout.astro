@@ -4,43 +4,27 @@ import { type CollectionEntry, getEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import TimeReport from '../components/TimeReport.astro';
 import { SITE_TITLE } from '../consts';
+import { readingOrder } from '../data/reading-order';
 import { getMember } from '../data/team';
+import { getPosts } from '../lib/posts';
 import { url } from '../lib/url';
 import BaseLayout from './BaseLayout.astro';
 
-type Props = CollectionEntry<'posts'>['data'];
+type Props = CollectionEntry<'posts'>['data'] & { id: string };
 
-const { title, description, date, updated, author, cover, coverAlt, tags, time, prev, next } = Astro.props;
+const { id, title, description, date, updated, author, cover, coverAlt, tags, time } = Astro.props;
 const member = author && getMember(author);
-type Links = CollectionEntry<'posts'>['data']['prev'];
-type Neighbour = { tag?: string; post: CollectionEntry<'posts'> };
 
-// Resolves `prev`/`next` to posts, each with the tag (storyline) it belongs to.
-// A single slug uses the first tag both posts share; a map names the tag itself.
-async function resolve(links: Links): Promise<Neighbour[]> {
-	if (!links) return [];
-	const pairs = typeof links === 'string' ? [[undefined, links] as const] : Object.entries(links);
-	const found = await Promise.all(
-		pairs.map(async ([tag, slug]) => {
-			const post = await getEntry('posts', slug);
-			if (!post) throw new Error(`"${title}" links to a post that doesn't exist: ${slug}`);
-			return { tag: tag ?? tags.find((t) => post.data.tags.includes(t)), post };
-		}),
-	);
-	return found;
+// Neighbours in the reading order (src/data/reading-order.ts), skipping posts that
+// aren't published (drafts in production).
+const published = new Map((await getPosts()).map((post) => [post.id, post]));
+for (const slug of readingOrder) {
+	if (!(await getEntry('posts', slug))) throw new Error(`reading-order.ts lists a post that doesn't exist: ${slug}`);
 }
-
-const prevLinks = await resolve(prev);
-const nextLinks = await resolve(next);
-// One row per storyline, in the order of this post's tags; links without a tag go last
-const rowTags = [...new Set([...prevLinks, ...nextLinks].map((link) => link.tag))].sort(
-	(a, b) => (a ? tags.indexOf(a) : Infinity) - (b ? tags.indexOf(b) : Infinity),
-);
-const rows = rowTags.map((tag) => ({
-	tag,
-	prev: prevLinks.find((link) => link.tag === tag)?.post,
-	next: nextLinks.find((link) => link.tag === tag)?.post,
-}));
+const order = readingOrder.filter((slug) => published.has(slug));
+const index = order.indexOf(id);
+const prev = index > 0 ? published.get(order[index - 1]) : undefined;
+const next = index >= 0 && index < order.length - 1 ? published.get(order[index + 1]) : undefined;
 ---
 
 <BaseLayout title={`${title} · ${SITE_TITLE}`} description={description} image={cover}>
@@ -71,24 +55,22 @@ const rows = rowTags.map((tag) => ({
 			<slot />
 		</div>
 
-		{rows.length > 0 && (
-			<nav class="post-body pager" aria-label="More posts in this storyline">
-				{rows.map(({ tag, prev, next }) => (
-					<div class="pager-row">
-						{prev && (
-							<a class="pill" href={url(`/posts/${prev.id}/`)} rel="prev" title={prev.data.title}>
-								<svg class="back" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5" /></svg>
-								Previous {tag} article
-							</a>
-						)}
-						{next && (
-							<a class="pill next" href={url(`/posts/${next.id}/`)} rel="next" title={next.data.title}>
-								Next {tag} article
-								<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5" /></svg>
-							</a>
-						)}
-					</div>
-				))}
+		{(prev || next) && (
+			<nav class="post-body pager" aria-label="Previous and next article">
+				<div class="pager-row">
+					{prev && (
+						<a class="pill" href={url(`/posts/${prev.id}/`)} rel="prev" title={prev.data.title}>
+							<svg class="back" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5" /></svg>
+							Previous article
+						</a>
+					)}
+					{next && (
+						<a class="pill next" href={url(`/posts/${next.id}/`)} rel="next" title={next.data.title}>
+							Next article
+							<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5" /></svg>
+						</a>
+					)}
+				</div>
 			</nav>
 		)}
 	</article>
