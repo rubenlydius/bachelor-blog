@@ -195,10 +195,13 @@ a.pill:hover {
 	margin-inline: auto;
 }
 .post-body > .wide,
-.post-body > .full {
+.post-body > .full,
+.post-body > pre {
 	max-width: none;
 }
-.post-body > .wide {
+/* Code blocks are always wide, so long lines need less sideways scrolling */
+.post-body > .wide,
+.post-body > pre {
 	--w: min(var(--width-wide), 100vw - 2 * var(--gutter));
 	width: var(--w);
 	margin-inline: calc(50% - var(--w) / 2);

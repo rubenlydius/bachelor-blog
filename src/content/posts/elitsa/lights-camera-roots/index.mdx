@@ -1,0 +1,204 @@
+---
+title: Lights, camera, roots!
+description: "Dev experiments: finding torch light with a webcam and growing roots from it"
+date: 2026-11-04
+author: elitsa
+tags: [development]
+draft: false
+---
+import wallTest from './image1.png';
+import faceTest from './image2.png';
+import growthTest1 from './vid1.mov';
+import growthTest2 from './vid2.mov';
+
+## Why I started coding
+
+TouchDesigner is usually the tool for an installation like this. But we didn't know yet if we could use it, as the budget was unclear at this point. So I wanted to find out early if the effect could be made with plain web code instead (HTML, CSS and JavaScript). I made my own GitHub repository for these tests. Later we made a shared one for the whole project.
+
+Our concept depends on two things working together:
+
+- the computer has to know where a light hits the wall
+- roots have to grow from that spot
+
+So I split it into two tests.
+
+## Teach me, Claude Code
+
+I used AI while coding, but I set it up as a teacher, not something that writes everything for me. It had to explain what it was going to do before writing code, wait for my OK, and then ask me questions to check I understood. Some parts of the code I wrote myself, for others I asked Claude Code to help, but I still had to understand every part before moving on.
+
+## Test 1: can a webcam find a torch?
+
+The first test is about using the camera's output to see whether there are any changes in brightness, i.e. the torch light, in the image. The page shows two views side by side. On the left is the webcam image. On the right is a black and white "mask" that shows what the computer counts as light.
+
+How it works:
+
+1. **The camera image gets scaled down** to 320×180 pixels. That makes it much faster to check, and it also smooths out camera noise.
+2. **For every pixel**, the code calculates how bright it is.
+3. **Calibrate.** With the torch off, you press C. The code saves the brightness of every pixel on the empty wall, as an average of 30 frames. I needed this because the MacBook camera doesn't let the browser lock its exposure, so a fixed "bright enough" value didn't work. After calibrating, the whole mask is black.
+4. **Every frame**, each pixel is compared to the saved wall. If it got brighter by more than the threshold (a slider), it turns white in the mask. Shine a torch on the wall and a white spot appears.
+5. **Finding the centre.** The code adds up the positions of all white pixels and takes the average. That average is the middle of the white spot. If there are fewer than 20 white pixels, it counts as noise, not a light. I worked this part out with help from AI.
+
+My prompt for Claude Code:
+
+> "Once the camera is calibrated, I want it to detect if there is a flashlight (=brightness is higher) on the wall. Compare every new frame with the empty wall and show me a black (dark) and white (light) view next to the camera output, where everything that got brighter turns white. Then find the centre of the white spot and mark it somehow, so I can see if it follows my light. Tiny specks shouldn't count, so camera noise isn't mistaken for a light."
+
+The AI added the threshold slider on its own, but it was a great addition: it let me control the threshold.
+
+<figure class="wide">
+
+```js
+// Calibrate: the average brightness of the empty wall over 30 frames
+reference = calibration.sum.map((total) => total / CALIBRATION_FRAMES);
+
+// Every frame: compare each pixel with the empty wall
+for (let i = 0; i < reference.length; i++) {
+  const isLit = getBrightness(pixels, i) - reference[i] > threshold;
+
+  if (isLit) {
+    litPixels++;
+    sumX += i % WIDTH;
+    sumY += Math.floor(i / WIDTH);
+  }
+}
+
+// The centre of the light is the average position of all lit pixels
+return litPixels >= MIN_LIGHT_PIXELS
+  ? { x: sumX / litPixels, y: sumY / litPixels, size: litPixels }
+  : null;
+```
+
+<figcaption class="mono">The core of the light detection: compare each pixel with the empty wall, and use the average position of the lit pixels as the centre of the light.</figcaption>
+</figure>
+
+<ImageRow wide>
+  <Figure src={wallTest} alt="The light detection test: a phone torch on a wall in the webcam image, next to the black and white mask with the lit area in white" caption="Testing with a torch on the wall." />
+  <Figure src={faceTest} alt="The light detection test: a phone torch pointed at the webcam, next to the black and white mask with the light in white" caption="Testing with the torch pointed straight at the camera." />
+</ImageRow>
+
+### What I learned
+
+It is possible without TouchDesigner. A normal webcam and plain JavaScript can find a torch on a wall and grow roots from it in real time.
+
+- The camera tracks a phone flashlight on the wall, even in a lit room.
+- In a dark room, a threshold of about 120 worked (it even works in a light room with a threshold of 40–70). Too low and the mask fills up with white pixels, too high and it stays black.
+- The further away and the steeper the angle, the weaker the detection, because the light spreads out. From about a metre back, the light could drop out.
+
+## Test 2: roots that grow from the light
+
+Once I knew where the light was, I added a big canvas, which would be the one the projector later shows on the wall. The first version was simple. When a light is detected, it is set as the starting point. From it, a wobbly line grows outward, and when the light goes away, the line fades. It worked, but it also showed a lot of problems, and making it look natural was one of them. It took a lot of small rules about how roots start, grow, follow the light and fall asleep. I also tweaked some things using Claude Code.
+
+### Step 1: the first roots
+
+I used the centre of the light, when it was detected, as the starting point for my root "burst". Five roots grew out from there in a circle, each one a single wobbly line made of small steps. They kept growing while the light was on, until they reached a maximum length. New roots were only planted if there were no roots nearby yet. When the light went away, the roots faded out and after about 7 seconds they were gone.
+
+While I was testing, I ran into my first obstacle. When I moved the light and paused for even half a second, a new burst of roots was planted, so I ended up with a trail of roots across the wall.
+
+### Step 2: planting only when the light rests
+
+**Problem:** root bursts everywhere.
+
+My prompt for Claude Code:
+
+> "When I am moving my flashlight around and I stop for even just half a second, I see a trail of root bursts. Can you create a function that allows the root closest to the light to continue growing, instead of creating a burst each time the light moves?"
+
+The AI proposed a function where a light has to rest on an empty part of the wall for 0.4 seconds before it plants anything, and planting spots stay at least 250 pixels apart. A fast sweep plants nothing. A light that moves slowly near a root is followed by that root: its tip grows toward the light, or a new branch starts toward it. I only had to tweak some of the values, otherwise I saw this as a good solution.
+
+```js
+function updateRest(light, deltaSeconds) {
+  if (!light) {
+    rest = null;
+    return false;
+  }
+
+  // the light moved too much, so start counting again
+  if (!rest || getDistance(rest, light) > REST_MOVEMENT) {
+    rest = { x: light.x, y: light.y, seconds: 0 };
+    return false;
+  }
+
+  rest.seconds += deltaSeconds;
+  return rest.seconds >= REST_SECONDS; // resting long enough to plant
+}
+```
+
+### Step 3: letting roots branch out
+
+**Problem:** roots growing as one line.
+
+After the first problem was fixed, I noticed another thing: each root was one single line, so it looked more like a scribble than a root. And once the roots reached their full length under a still light, everything stopped, so the wall felt dead for someone who just wants to stand and watch.
+
+I decided to add a function that allows roots to split into side branches while they grow. I had to add a rule that each branch is shorter than the one it came from, so the splitting always ends. Otherwise it became a jungle mess, but with this rule the roots also behave like an actual branch system. A light resting on existing roots sprouts 2 new roots from that spot, and 2 more every 3 seconds.
+
+To create those root sprouts, I also had to add different kinds of roots: planted (from a light), followed (when you move your light) or, in this case, side (split off). All roots remember their parent.
+
+```js
+function splitBranch(root) {
+  // each branch is shorter than its parent, so splitting always ends
+  const branchLength = root.branchLength * BRANCH_SHRINK;
+  if (branchLength < MIN_BRANCH_STEPS) return;
+
+  // split to a random side, at a random angle
+  const side = Math.random() < 0.5 ? -1 : 1;
+  const angle = root.angle + side * randomBetween(MIN_SPLIT_ANGLE, MAX_SPLIT_ANGLE);
+
+  roots.push(
+    createRoot(root.points.at(-1), angle, {
+      kind: "side",
+      branchLength,
+      parent: root,
+      homeAngle: root.homeAngle,
+      // ...
+    }),
+  );
+}
+```
+
+### Step 4: letting roots fall asleep slowly
+
+**Problem:** roots disappearing all at once, and "popping" while growing.
+
+When the light went away, a whole root faded at the same time and then suddenly disappeared, which didn't look natural. I wanted it to feel more like a gradient, with the ends slowly getting shorter. By creating tapered ends and changing the opacity of the ends, unlit roots now dim slowly and start growing backwards.
+
+```js
+for (const { points, opacity, taperSteps } of roots) {
+  const lastIndex = points.length - 1;
+  const taperStart = Math.max(0, Math.ceil(lastIndex - taperSteps));
+
+  // the main part of the root
+  strokePoints(points.slice(0, taperStart + 1), opacity);
+
+  // the tip fades out, one small piece at a time
+  for (let i = taperStart; i < lastIndex; i++) {
+    strokePoints([points[i], points[i + 1]], (opacity * (lastIndex - i)) / taperSteps);
+  }
+}
+```
+
+I also wrote a function, `updateRootTree`, so that branches never end up floating. For each root, it finds where its last branch attaches and the longest path to the furthest branch tip. A root can only shrink back as far as that last branch, and the longest path sets how fast it shrinks, so a root and its branches pull back together.
+
+<Video src={growthTest1} title="Pale green roots growing and branching across a black canvas, around the soft glow where the light is detected" align="wide" />
+
+On the opposite side, literally, growing had a problem of its own: the pop. Because the end of each root fades out, a root that had stopped growing still looked like it was growing. When it split, that faded end jumped to full brightness in one frame. Now the ends stay faded while a root grows and when it splits. The fade only disappears when a root shrinks back onto one of its branches, and then it goes slowly, so there's no jump.
+
+<Video src={growthTest2} title="Roots growing out from one point and splitting into side branches toward the soft glow of the light" align="wide" />
+
+### How it works now
+
+- **Starting.** A soft glow appears under the light straight away. A light resting on an empty part of the wall for 0.4 seconds plants 5 roots, and a fast sweep plants nothing.
+- **Growing.** Roots grow in small, wobbly steps and split into shorter side branches, never turning more than 90° from their direction. A root also can't turn more than 90° away from the direction it started in, and its branches keep that direction, so the wall doesn't look messy.
+- **Reacting to the light.** A light on existing roots sprouts 2 new roots every 3 seconds, and a slowly moving light is followed by the closest root.
+- **Falling asleep.** Unlit roots dim, and after 3 seconds they pull back from their tips. Light brings them back.
+- **Looking right.** Every root ends in a soft, transparent tip.
+
+### What I learned
+
+Doing this test showed me some of the things we will have to figure out later (and I need to add an init function, to avoid everything being called randomly). Right now:
+
+- Two lights are seen as one, placed in the middle between them. That's because the code takes the average of all white pixels together. Tracking several lights separately is the next big step, since our whole concept is about people joining in.
+- One light kept still fills up the point limit in about a minute, and after that nothing can grow anywhere.
+- I haven't used a projector yet. In the real space, the camera might see the projected roots and think they are torches.
+- The MacBook camera can't lock its exposure, but we knew we would use a USB webcam with manual controls anyway.
+
+## Next steps
+
+In the meantime, we received feedback from the client on our concept! We gathered all the feedback and processed it, so that we could write our concept definition (even though it can still change in the future).

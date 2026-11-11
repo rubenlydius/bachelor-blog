@@ -1,45 +1,60 @@
 ---
 import type { MemberId } from '../data/members';
-import { formatHours, type Hours, totalHours } from '../data/pillars';
+import { formatHours, hoursFromTasks, mergeTasks, type Task, totalHours } from '../data/pillars';
 import { team } from '../data/team';
 import { url } from '../lib/url';
 import HoursBar from './HoursBar.astro';
+import TaskList from './TaskList.astro';
 
 interface Props {
-	time: Partial<Record<MemberId, Hours>>;
+	time: Partial<Record<MemberId, Task[]>>;
 }
 
 const { time } = Astro.props;
-const rows = team.filter((member) => time[member.id]).map((member) => ({ member, hours: time[member.id]! }));
+const rows = team
+	.filter((member) => time[member.id]?.length)
+	.map((member) => {
+		const tasks = mergeTasks(time[member.id]!);
+		return { member, tasks, hours: hoursFromTasks(tasks) };
+	});
 const max = Math.max(...rows.map((row) => totalHours(row.hours)), 1);
-const teamTotal = rows.reduce((sum, row) => sum + totalHours(row.hours), 0);
+const teamHours = hoursFromTasks(rows.flatMap((row) => row.tasks));
 ---
 
 <section class="time-report">
+	<div class="summary">
+		<p class="row-header">
+			<strong>Team</strong>
+			<span class="total">{formatHours(totalHours(teamHours))}</span>
+		</p>
+		<HoursBar hours={teamHours} />
+	</div>
 	<ul>
-		{rows.map(({ member, hours }) => (
+		{rows.map(({ member, tasks, hours }) => (
 			<li>
 				<div class="row-header">
 					<a href={url(`/team/${member.id}/`)}>{member.name}</a>
 					<span class="total">{formatHours(totalHours(hours))}</span>
 				</div>
 				<HoursBar hours={hours} max={max} />
+				<TaskList tasks={tasks} />
 			</li>
 		))}
 	</ul>
-	<p class="team-total mono">
-		<span>Team total</span>
-		<strong>{formatHours(teamTotal)}</strong>
-	</p>
 </section>
 
 <style>
 	.time-report {
 		margin: 1rem 0 3rem;
 	}
+	.summary {
+		margin-bottom: 3rem;
+		padding-bottom: 2rem;
+		border-bottom: 1px solid var(--color-line);
+	}
 	ul {
 		display: grid;
-		gap: 2rem;
+		gap: 3rem;
 		margin: 0;
 		padding: 0;
 		list-style: none;
@@ -48,7 +63,7 @@ const teamTotal = rows.reduce((sum, row) => sum + totalHours(row.hours), 0);
 		display: flex;
 		align-items: baseline;
 		justify-content: space-between;
-		margin-bottom: 0.5rem;
+		margin: 0 0 0.5rem;
 	}
 	.row-header a {
 		color: var(--color-text);
@@ -62,13 +77,5 @@ const teamTotal = rows.reduce((sum, row) => sum + totalHours(row.hours), 0);
 		font-family: var(--font-display);
 		font-size: 1.375rem;
 		letter-spacing: var(--tracking-display);
-	}
-	.team-total {
-		display: flex;
-		justify-content: space-between;
-		margin: 2rem 0 0;
-		padding-top: 0.75rem;
-		border-top: 1px solid var(--color-line);
-		color: var(--color-text);
 	}
 </style>

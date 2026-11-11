@@ -1,0 +1,76 @@
+---
+title: Definitely defined
+description: "Processing the client's feedback and writing our concept definition"
+date: 2026-11-05
+author: elitsa
+tags: [ux]
+draft: false
+---
+import budget from './image.png';
+
+export const board = 'https://www.figma.com/board/OvVLzZy6et4hOgKfZRv6rX/bachelor';
+
+After our pitch, the client gave us their scores and feedback. The full feedback form goes to our coaches, but the client also sent us a message directly. With that feedback in mind, we wrote our concept definition: the place where the whole concept and the reasoning behind it come together, and which we can always refer back to.
+
+## Feedback from the client
+
+Overall, the client was very happy with our first concept. They described it as creative, yet simple and accessible for all ages, and liked the warm atmosphere of growing roots and glowing lights in dark spots. They also gave us two practical points to keep in mind:
+
+- **Beamers:** there are only 3 short-throw beamers for the whole event. If other groups need one too, we might have to find an extra one through our own network.
+- **Budget:** every group has around €250 to cover all expenses.
+
+## What we did with it
+
+The feedback didn't change the idea itself, but it did change how we build it.
+
+- **No TouchDesigner:** a paid licence doesn't fit in €250, so we build the visuals ourselves in JavaScript with Three.js. Our root experiments had already shown that this works.
+- **A budget table:** we listed everything we need and where it comes from. Most of the tech can be borrowed from the client or the school, so the money goes to the things we have to buy.
+- **Beamers:** we still want a short-throw beamer, because it keeps visitors from casting shadows on the wall. We just have to keep in mind that we might need to find one ourselves.
+
+<Figure src={budget} alt="Budget table: short-throw projectors (min. 3) from the client or school, €0; Mac mini from school, €0; webcam from school or bought, €0–50; about 100 torches, €50; white curtains to project on, €50; physical element still to decide, about €100; total max. €250" caption="Our budget: most of the tech is borrowed, so the €250 goes to torches, curtains and a physical element." />
+
+## Writing the concept definition
+
+Writing the concept definition was harder than we expected. Over the past weeks, our concept had collected a lot of ideas and meanings: breath, photosynthesis, the history of the power station, light in the darkest month of the year, people connecting with each other... It was overwhelming to fit all of that into one text and still show why every choice was made.
+
+So we put everything into one giant mind map. The concept definition sits in the middle, and around it are all the parts it's built from: how it works, the interactions, the design principles, the target audience and stakeholders, the event and the site, nature and breath, the USPs and the feasibility. The connections show how everything links together, and you can follow each branch to see how deep the layers go. Everything that comes from research has its sources next to it in a yellow box.
+
+<FigmaEmbed src={board} node="760-11547" title="The concept definition mind map" caption="The full concept definition: the concept in the middle, and everything it's based on around it." align="wide" />
+
+## The concept in short
+
+**In one sentence:**
+
+<Breakout variant="plain">"A breathing wall of roots that grows from the light visitors bring, and connects them with each other."</Breakout>
+
+**In a nutshell:**
+
+> "An interactive wall in the Pompenzaal where visitors bring light, with a torch from the table or their own phone, and roots grow from wherever the light lands. When people's roots meet, they connect and flowers bloom, and the whole wall slowly breathes."
+
+The full concept definition, from the middle of the map:
+
+<Note long>
+
+**Breathe back to light** is an interactive installation for Transfo Intiem 2026, a free winter evening walk on the old power station site in Zwevegem, with the theme "Breath".
+
+In a dark corner of the Pompenzaal, a wall is covered in natural elements (plants, leaves, flower buds...) that slowly move, as if they are breathing. Visitors bring light: a torch from a small table or their own phone flashlight. Wherever the light lands, roots start to grow from that spot. With one light, the roots stay sparse, with a few leaves. When more people join, the roots grow toward each other and connect, and flowers start to bloom. One torch on the table always shines on the wall, so it is alive before anyone touches it and shows visitors what they can do. When the lights move on, the wall slowly falls asleep, ready for the next group.
+
+The installation is made for families and mixed-age groups, from a 5 year old to an 80 year old. Kids can lead, while adults and grandparents join in or simply watch. It needs no instructions, works for a whole group at once, and stays calm in the possibly busy and echoing hall.
+
+Behind the concept there are several layers of meaning. Plants need light to grow, and they give back the oxygen we breathe in. The power station once burned coal and pumped water from the canal. Now the site is turning green, and we bring that nature inside: a new form of life that grows from the light people bring, and connects them with each other on a dark winter evening.
+
+</Note>
+
+## Layers of meaning
+
+Behind the concept there are several layers of meaning. Plants need light to grow, and they give back the oxygen we breathe. The wall itself breathes slowly, so the theme is felt without any text. And the old power station, which once burned coal, gets a new form of life as nature comes back inside. Kids don't need to know any of this to enjoy the wall, but for adults it adds a second layer.
+
+<FigmaEmbed src={board} node="1180-9175" title="Layers of meaning table and meaning map" caption="The top layers of our concept vs our meaning map: all the layers." align="wide" />
+
+## What we learned
+
+The feedback confirmed that the core idea works: simple enough for a 5 year old, with enough atmosphere for adults. The budget was the biggest reality check, and it's the reason we build everything ourselves. Putting the concept definition in a mind map helped us check that every part has a reason behind it and that nothing important was missing. It also made clear what is still open: whether people understand the wall within seconds, and whether the camera can find their light on the projection.
+
+## Next steps
+
+Now that we know what we're building, we looked at what visitors actually want to do at the wall. In our next post, we map out their goals and the task flows to reach them.

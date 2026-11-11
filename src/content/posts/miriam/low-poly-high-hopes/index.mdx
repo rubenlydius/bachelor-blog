@@ -1,0 +1,79 @@
+---
+title: Low-poly, high hopes
+description: "Blender experiment: a procedural low-poly lily we can shape and adjust"
+date: 2026-11-04
+author: miriam
+tags: [design]
+draft: false
+---
+import wireframe from './image1.png';
+import rendered from './image2.png';
+import nodes from './image3.png';
+import panel1 from './image4.png';
+import panel2 from './image5.png';
+import variation1 from './image6.png';
+import variation2 from './image7.png';
+import variation3 from './image8.png';
+
+While looking for references, we found a procedural lily generator for Blender on Superhive (formerly Blender Market). It looked great and had a lot of settings, but it's a paid tool, and it has much more than we need right now. Before spending money on it, we wanted to find out what we actually need. So I decided to build a simpler version of our own, made for our installation:
+
+- **only the settings we need**, so we can quickly try out different looks for the flower
+- **a low number of vertices**, because the flowers will run live on a big projection, possibly with many of them at the same time
+- **something we fully understand and can change**, so we're not stuck when we need something extra
+
+## Building it with Claude
+
+I built the generator together with Claude. I gave it this prompt:
+
+> "Create a procedural lily generator in Blender using Geometry Nodes. I want to experiment with the visuals for our installation, so it should have the key settings I need to adjust the flower: how open the flower is, the size and shape of the petals, their curvature and edges, the colour, the stamens and pistil, and the stem. Keep the number of vertices as low as possible, so it can run smoothly in real time."
+
+Claude wrote a Python script that builds the whole Geometry Nodes setup in Blender. After that, I started adjusting the flower myself and asking for changes when something was missing.
+
+<ImageRow>
+  <Figure src={wireframe} alt="Wireframe view of the lily in Blender" caption="Wireframe view of the lily in Blender, showing how the petals and stems are made." />
+  <Figure src={rendered} alt="Rendered pink lily with a green stem in Blender" caption="Rendered view of the lily in Blender, showing how it looks with materials and light applied." />
+</ImageRow>
+
+## How it's built
+
+In short, the generator only really builds **one petal**:
+
+1. **A petal** starts as a simple flat grid. The nodes bend it into a petal shape: pointed at the tip, narrow at the base, curved along its length, with a slight fold in the middle and wavy edges.
+2. **Two rings of petals:** that one petal is copied around the centre, three times in an outer ring and three times in a slightly smaller, rotated inner ring, just like a real lily.
+3. **Stamens and pistil** are thin curved lines turned into very thin tubes, with small low-poly shapes as the anthers.
+4. **The stem** is one curved tube with only a few sides.
+
+Because everything is built from settings, changing one value changes all petals at once.
+
+<Figure src={nodes} alt="The Blender Geometry Nodes workspace with the Lily Generator node tree" caption="The Blender Geometry Nodes workspace with the Lily Generator node tree, sorted into coloured frames for each part of the flower." align="wide" />
+
+## What we can adjust
+
+All settings are sliders on the modifier, grouped into panels:
+
+- **General:** how open the flower is, its size and tilt
+- **Petals:** number of petals, length, width, tip shape, curvature, bend, edge ruffle and the inner ring
+- **Colour:** hue, saturation and brightness of the petals
+- **Stamen & Pistil:** number, size and spread
+- **Stem:** length, thickness and bend
+- **Leaves:** number, position along the stem, angle, size, shape, droop, fold, twist and a bit of randomness
+- **Detail:** how many vertices the petals and leaves use
+
+The petal material adds a darker vein down the middle, a green colour at the base and small speckles, like on real lilies. These are done in the material, not in the geometry, so they don't add any vertices.
+
+<ImageRow>
+  <Figure src={panel1} alt="The Lily Generator modifier panel in Blender, first half" caption="The Lily Generator modifier panel with sliders for the general settings, petals, colour, stamens and pistil." />
+  <Figure src={panel2} alt="The Lily Generator modifier panel in Blender, second half" caption="The second half of the modifier panel with sliders for the stem, leaves and the level of detail." />
+</ImageRow>
+
+<ImageRow wide>
+  <Figure src={variation1} alt="A pink lily with many long, narrow, pointed petals" />
+  <Figure src={variation2} alt="A full, rose-like pink flower with many layered petals" />
+  <Figure src={variation3} alt="A pale pink lily with six wide petals, close to a real lily" caption="Different lily variations created by adjusting the sliders." />
+</ImageRow>
+
+## What's next
+
+This lily is a good start for us to experiment with the visuals. We now have a realistic looking flower that is still light enough to run in real time, and we can change its look in a few seconds. The next step would be to bring the flowers into TouchDesigner or Three.js, add visual effects on top of them, and just play around to see what works well and what we like.
+
+Before anything can bloom, we need roots that grow from the visitors' light. So next, we started experimenting with code: finding the light of a torch with a camera, and letting roots grow from it.

@@ -25,6 +25,27 @@ const latest = (await getPosts()).slice(0, 3);
 					for Transfo Intiem. Here we keep track of our process: what we're working on, how we tackle
 					it, and what we learn along the way.
 				</p>
+				<div class="about-links">
+					<div class="link-group">
+						<a class="pill arrow-link" href={url('/posts/')}>
+							Read our blog
+							<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5" /></svg>
+						</a>
+						<a class="pill arrow-link" href={url('/team/')}>
+							Meet the team
+							<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5" /></svg>
+						</a>
+					</div>
+					<a
+						class="pill arrow-link"
+						href="https://www.figma.com/board/OvVLzZy6et4hOgKfZRv6rX/bachelor?node-id=0-1&t=Eswh8sjlViz69Otp-1"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						Our FigJam board
+						<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" /></svg>
+					</a>
+				</div>
 			</div>
 		</section>
 
@@ -62,18 +83,38 @@ const latest = (await getPosts()).slice(0, 3);
 	.split p:last-child {
 		margin-bottom: 0;
 	}
+	.about-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		/* FigJam button on the right; once it wraps to its own row, it's alone
+		   there and space-between puts it on the left */
+		justify-content: space-between;
+		margin-top: 1.5rem;
+	}
+	.link-group {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+	.about-links .pill {
+		font-size: 0.875rem;
+		padding: 0.2em 0.9em;
+	}
 	.latest-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		margin-bottom: 2.5rem;
 	}
-	.all-posts {
+	.all-posts,
+	.arrow-link {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.4em;
 	}
-	.all-posts svg {
+	.all-posts svg,
+	.arrow-link svg {
 		width: 0.85em;
 		height: 0.85em;
 		fill: none;

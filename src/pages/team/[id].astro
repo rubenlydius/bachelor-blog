@@ -3,6 +3,7 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import HoursBar from '../../components/HoursBar.astro';
 import MemberPhoto from '../../components/MemberPhoto.astro';
 import PostList from '../../components/PostList.astro';
+import TaskList from '../../components/TaskList.astro';
 import { SITE_TITLE } from '../../consts';
 import { formatHours, totalHours } from '../../data/pillars';
 import { type TeamMember, team } from '../../data/team';
@@ -62,6 +63,7 @@ const firstName = member.name.split(' ')[0];
 				<strong class="big-total">{formatHours(total)}</strong>
 			</div>
 			<HoursBar hours={time.total} />
+			{time.tasks.length > 0 && <TaskList tasks={time.tasks} />}
 
 			{time.weeks.length > 0 && (
 				<ol class="weeks">
