@@ -21,4 +21,5 @@ export const readingOrder: string[] = [
 	'definitely-defined',
 	'goals-and-flows',
 	'test-test-1-2-3',
+	'the-more-the-merrier',
 ];

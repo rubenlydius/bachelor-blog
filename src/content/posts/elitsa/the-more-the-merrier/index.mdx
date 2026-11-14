@@ -1,0 +1,167 @@
+---
+title: The more, the merrier
+description: "Dev experiments: tracking several lights at once"
+date: 2026-11-09
+author: elitsa
+tags: [development]
+draft: false
+---
+import trackingVideo from './video.mov';
+
+## Why one light isn't enough
+
+At the end of test 2, the camera still saw only one light. When two lights were on the wall, the code took the average of all lit pixels, so the "light" ended up in the empty space between them. Our whole concept is about people joining in, so this had to be fixed before anything else. In test 3, the camera had to find every light separately, and every light had to grow its own roots.
+
+## Cleaning up first
+
+I started test 3 from a copy of test 2. Before adding anything new, I tidied it up. I added section comments and moved the start-up code into one `init` function at the end. Until then, the code that runs was scattered through the file, and I wanted everything that runs when the page starts in one spot, with the rest of the file only declaring things. I made sure the whole code follows the DRY and KISS principles. I also added a few small helpers, like `clamp`, to keep the taper values for the root growth and shrinking between a minimum and a maximum, since I knew I would be tweaking those. A clean file made it easier to work.
+
+## Test 3: several lights at once
+
+### Step 1: giving every light its own memory
+
+**Problem:** everything was made for one light.
+
+The growth code used single variables for things like how long the light had been resting, its cooldowns and its glow, which I had at the top of the file to easily tweak. With two lights, they would overwrite each other. So I made every light its own object, with its own memory, and made the growth code loop over a list of lights instead of using just one.
+
+<figure class="wide">
+
+```js
+// every light keeps its own memory, so several lights don't mix up
+function createLight(position = null) {
+  return {
+    position, // { x, y } on the growth canvas, or null when the light is off
+    lostSeconds: 0,
+    rest: null,
+    isResting: false,
+    closest: null,
+    followedRoot: null,
+    branchCooldown: 0,
+    sproutCooldown: 0,
+    glow: { x: 0, y: 0, opacity: 0 },
+  };
+}
+```
+
+<figcaption class="mono">Every light is an object with its own position, timers and glow.</figcaption>
+</figure>
+
+### Step 2: the mouse as a light
+
+**Problem:** only one working flashlight to test with.
+
+This was the first real multiple-light step. I didn't have two flashlights: I only had my phone, and a crappy, barely working keychain with a flashlight. That's why I added a button with a mouse event listener, so the mouse is added as a light in the list. The growth code didn't need any changes, because it only reads the position of each light. It doesn't care if that position comes from the camera or the mouse.
+
+<figure class="wide">
+
+```js
+// the mouse is just one more light in the list, next to the camera lights
+const mouseLight = createLight();
+lights = [mouseLight, ...cameraLights];
+
+// the canvas is drawn smaller on the page than its real size, so I had to scale the mouse position up
+function updateMouseLight(event) {
+  if (!isMouseLight) return;
+
+  const box = growthCanvas.getBoundingClientRect();
+  mouseLight.position = {
+    x: ((event.clientX - box.left) / box.width) * growthCanvas.width,
+    y: ((event.clientY - box.top) / box.height) * growthCanvas.height,
+  };
+}
+```
+
+<figcaption class="mono">The mouse light: the growth code treats it like any other light.</figcaption>
+</figure>
+
+### Step 3: finding separate spots
+
+**Problem:** two lights became one, in the middle between them.
+
+The code was still taking the average of all lit pixels, so with two spots, the centre landed between them. Instead of averaging all lit pixels, I wanted the code to go through the black and white mask and detect the different lights. I had to ask Claude to help, as my logic didn't detect the second light.
+
+My prompt for Claude Code:
+
+> "With two lights on the wall, the mask shows two separate white spots, but the red circle sits in the empty space between them. I want the camera to find every light on its own, since we have the mask that clearly shows the separate lights, so each one can grow its own roots. Can you explain how we can detect each spot separately and why you would do it like that?"
+
+The AI's answer was this: every time the code finds a lit pixel it hasn't visited yet, it collects all the lit pixels touching it. I imagined this like the paint bucket in Photoshop. That patch is one spot, and its centre is the average of only its own pixels. Then it looks for the next patch. Tiny specks under 20 pixels are still ignored.
+
+<figure class="wide">
+
+```js
+// like the paint bucket: walks through every pixel touching the start pixel
+function fillSpot(bridged, litPixels, start) {
+  const toVisit = [start];
+  bridged[start] = 0;
+  let size = 0;
+  let sumX = 0;
+  let sumY = 0;
+
+  while (toVisit.length > 0) {
+    const i = toVisit.pop();
+    if (litPixels[i] === 1) {
+      size++;
+      sumX += i % WIDTH;
+      sumY += Math.floor(i / WIDTH);
+    }
+    for (const neighbour of getNeighbours(i)) {
+      if (bridged[neighbour] === 1) {
+        bridged[neighbour] = 0;
+        toVisit.push(neighbour);
+      }
+    }
+  }
+  return { x: sumX / size, y: sumY / size, size };
+}
+```
+
+<figcaption class="mono">Flood fill: every separate patch of light becomes its own spot, with its own centre.</figcaption>
+</figure>
+
+### Step 4: following each light
+
+**Problem:** the glow jumps around.
+
+While testing, I noticed that the light's glow on the screen sometimes jittered. I guessed it had something to do with the frames and the detection of the lights. The camera gave a new list of spots every frame, but the spots didn't know which light they were in the last frame. So I made every light take the nearest spot, as long as it's close enough to be the same light. A light without a spot keeps its last position for 0.2 seconds, so a short flicker doesn't switch it off entirely: the glow on screen doesn't disappear immediately. If the light doesn't come back (no spot detected), its glow fades out.
+
+<figure class="wide">
+
+```js
+// each camera light keeps following its own spot, new spots become new lights
+function matchSpots(spots, deltaSeconds) {
+  const freeSpots = [...spots];
+
+  for (const light of cameraLights) {
+    const spot = light.position && findNearestSpot(light.position, freeSpots);
+
+    if (spot) {
+      light.position = spot;
+      light.lostSeconds = 0;
+      freeSpots.splice(freeSpots.indexOf(spot), 1);
+    } else {
+      light.lostSeconds += deltaSeconds;
+      if (light.lostSeconds >= LIGHT_HOLD_SECONDS) light.position = null;
+    }
+  }
+
+  for (const spot of freeSpots) cameraLights.push(createLight(spot));
+  cameraLights = cameraLights.filter((light) => !isLightFinished(light));
+  lights = [mouseLight, ...cameraLights];
+}
+```
+
+<figcaption class="mono">A taken spot is removed from the list, so two lights can never follow the same spot.</figcaption>
+</figure>
+
+<Video src={trackingVideo} title="Two soft glows on a black canvas, each growing its own pale green roots that spread and branch across the wall" caption="Tracking a few lights right now." align="wide" />
+
+## What I learned
+
+Tracking several lights works in plain JavaScript, and it's fast enough to run every frame. Because the growth code only reads the position of each light, it didn't need to change at all, which showed me how useful it is to keep detection and growth separate. Some things about the current state of the test:
+
+- Lights that almost touch become one light. That's fine for now, because on the wall they look like one patch anyway.
+- Reflections are real light, so the camera sees them too. The light detection can pick up a reflection as a new light, and roots can grow from it as well. I still have to figure out how to deal with that.
+
+## Next steps
+
+Now every light grows its own roots, but they still grow side by side. Next, I want the roots of different lights to grow toward each other and connect, with flowers blooming where they meet. But there is something more important than that: we need to figure out what we will project. Or better said: "What is it going to look like?!" In the next post, we try to figure out our stylistic direction.
