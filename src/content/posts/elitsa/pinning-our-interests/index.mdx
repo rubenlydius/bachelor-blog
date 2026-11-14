@@ -1,0 +1,93 @@
+---
+title: Pinning our interests
+description: "Design research: from first styleboards and inspiration to a styleboard, a moodboard and the reasons behind our style"
+date: 2026-11-10
+author: elitsa
+tags: [design]
+draft: false
+---
+import { url as withBase } from '../../../../lib/url';
+import styleboard from './styleboard.png';
+import moodboard from './moodboard.png';
+import lily from './lily.png';
+import referenceVideo from './reference.mov';
+import tryoutVideo from './tryout.mov';
+
+export const board = 'https://www.figma.com/board/OvVLzZy6et4hOgKfZRv6rX/bachelor';
+
+Our concept was clear, but we still had no clear picture of what the wall should look like. "Nature" can look like a hundred different things, so this step was all about collecting, trying and comparing before choosing.
+
+## Where we started
+
+Our design research started with ten different styleboards, each showing nature and growth in a different way (see <a class="pill" href={withBase('/posts/love-at-first-lily/')}>A love at first lily →</a>). The feedback from the team pointed in one direction: realistic-looking nature, lilies as the main flower, a dark background, and a more abstract, digital layer on top for the light and the roots. Right after that, we built a low-poly lily in Blender to see if realistic flowers could run in real time (see <a class="pill" href={withBase('/posts/low-poly-high-hopes/')}>Low-poly, high hopes →</a>).
+
+<FigmaEmbed src={board} node="1352-17828" title="Our first ten styleboards" caption="Our first ten styleboard explorations, each a different way of showing nature and growth." align="wide" />
+
+## Scrolling for inspiration
+
+Next, we looked at what other people make. We collected installations and experiments we found on social media and YouTube. This time we didn't only look at how they were built, but also at how they looked and felt. A few things kept coming back:
+
+- **Light as the input:** installations where a flashlight makes something appear were our favourites.
+- **Things that follow you:** shapes that follow a hand or a light, which looked a lot like our roots growing from the light.
+- **Projecting on other surfaces:** on mesh, on water or through a plastic tarp with holes, which made us think about what we project on.
+- **Physical interaction, digital result:** you do something simple with your body, and the space answers.
+
+<FigmaEmbed src={board} node="1352-17430" title="Inspiration from social media" caption="Installations and experiments we found on social media." align="wide" />
+
+## Styleboard and moodboard
+
+Then we brought everything together in a styleboard and a moodboard. The styleboard shows how the wall could look: plants and flowers on dark backgrounds, realistic-ish lilies, fine branching lines and fractal trees, and small glowing details. The moodboard shows how it should feel, with light falling into dark spaces, soft green forests, and nature taking back buildings, like trees growing out of chimneys and plants pushing through cracks in concrete. That's exactly our story of nature coming back into an old power station.
+
+<Figure src={styleboard} alt="Styleboard: realistic lilies and other flowers on black backgrounds, fine branching line drawings, fractal trees and small glowing details" caption="Our styleboard: how the wall could look." align="wide" />
+
+<Figure src={moodboard} alt="Moodboard: light falling into dark spaces, soft green forests, trees growing out of chimneys and plants pushing through concrete" caption="Our moodboard: how the wall should feel." align="wide" />
+
+## First visual tryouts
+
+<Figure src={lily} alt="A pink low-poly lily with a green stem and leaves on a black background" caption="Our 3D lily model." align="left" />
+
+With that inspiration, we made our first visual tryouts. We started working in Blender, making 3D models of lilies. We made them low-poly, because we were still worried about the frame rate, and the look also fits our style. We also did some first coding experiments: we added the lilies as .glb files, and with Three.js and Blender animations we made them feel alive and added some visual effects.
+
+{/* TODO: pill link to the post about the visual tryouts */}
+
+<div style="clear: both"></div>
+
+We also made another TouchDesigner tryout, just for fun: an invisible, glass-like effect from <a href="https://www.instagram.com/p/Dbqb18UuyGy/" target="_blank" rel="noopener noreferrer">one of our references</a>. It did teach us how quickly effects cost performance. Just tracking a hand dropped the frame rate from 60 to 30 fps, and only tracking every second frame brought it back up to 40–50 fps.
+
+<ImageRow wide>
+  <Video src={referenceVideo} ratio={1188 / 908} title="The reference: a TouchDesigner window where a person raises a hand in a concrete building, with the invisible, glass-like effect around them" caption="The reference." />
+  <Video src={tryoutVideo} ratio={1} title="Our TouchDesigner tryout: the node network over the webcam image, with a glass-like, rainbow-edged outline following a hand and body" caption="The result of our TouchDesigner experiment." />
+</ImageRow>
+
+## Why we chose this style
+
+While building the boards, we kept writing down why we made each choice, and looked for research to back it up. That became our "Stylistic choices" board:
+
+- **Colours:** sage, mint, baby blue, blue, pastel pink and blush. Blue and green are rated as the calmest colours (Wilms & Oberfeld, 2018), and we keep them soft and muted, so the wall stays calm in a busy hall.
+- **Digital nature:** even images of nature help people relax (Ulrich et al., 1991), so a projected garden can still give that calm feeling.
+- **Fractals:** branching shapes like roots and trees are pleasant to look at and can lower stress (Taylor, 2017).
+- **Realistic-ish 3D:** a flower should look like a flower, for a 5 year old and an 80 year old, while staying light enough to run live.
+- **The lily:** easy to recognise, made to bloom, and a symbol of new life.
+- **A dark background:** we project on concrete, and light elements on a dark background stay clear.
+- **Breathing and growing:** plants that breathe with the wall, oxygen bubbles, and lines of light while things grow.
+
+<FigmaEmbed src={board} node="1377-19872" title="Our stylistic choices board" caption="Our stylistic choices: the colours and the reasons behind our style, with sources." align="wide" />
+
+## What we learned
+
+Our styleboard doesn't point in one clear direction yet. It mixes realistic flowers, technical lines and glowing effects, and we still have to find the right balance between them. But we did agree on the basics: a dark background, recognisable plants with the lily as the main flower, light as the digital layer on top, and calm, muted colours with elements that pop. Writing down the reasons while we were choosing also helped a lot: instead of "we like this", we can now explain why it fits our concept and our visitors.
+
+## Next steps
+
+Next, we started with the first visual tryouts, continuing with the lily we created earlier in Blender and experimenting with effects we could add on top of it, while also thinking about how the roots could look.
+
+## Sources
+
+- Britannica. (n.d.). *Lily*. Encyclopaedia Britannica. Retrieved 12 November, from <a href="https://www.britannica.com/plant/lily" target="_blank" rel="noopener noreferrer">https://www.britannica.com/plant/lily</a>
+- Browning, W. D., Ryan, C. O., & Clancy, J. O. (2014). *14 Patterns of Biophilic Design: Improving Health and Well-Being in the Built Environment*. Terrapin Bright Green. Retrieved 12 November, from <a href="https://www.terrapinbrightgreen.com/report/14-patterns/" target="_blank" rel="noopener noreferrer">https://www.terrapinbrightgreen.com/report/14-patterns/</a>
+- Kjellgren, A., & Buhrkall, H. (2010). A comparison of the restorative effect of a natural environment with that of a simulated natural environment. *Journal of Environmental Psychology, 30*, 464–472.
+- Laborde, S., et al. (2022). Effects of voluntary slow breathing on heart rate and heart rate variability: A systematic review and a meta-analysis. *Neuroscience & Biobehavioral Reviews*. Retrieved 8 November, from <a href="https://www.sciencedirect.com/science/article/abs/pii/S0149763422002007" target="_blank" rel="noopener noreferrer">https://www.sciencedirect.com/science/article/abs/pii/S0149763422002007</a>
+- Shibata, S., Tokuhiro, K., Ikeuchi, A., Ito, M., Kaji, H., & Muramatsu, M. (2024). Visual properties and perceived restorativeness in green offices: a photographic evaluation of office environments with various degrees of greening. *Frontiers in Psychology, 15*, 1443540. Retrieved 12 November, from <a href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1443540/full" target="_blank" rel="noopener noreferrer">https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1443540/full</a>
+- Taylor, R. (2017). Fractal patterns in nature and art are aesthetically pleasing and stress-reducing. *The Conversation*. Retrieved 12 November, from <a href="https://theconversation.com/fractal-patterns-in-nature-and-art-are-aesthetically-pleasing-and-stress-reducing-73255" target="_blank" rel="noopener noreferrer">https://theconversation.com/fractal-patterns-in-nature-and-art-are-aesthetically-pleasing-and-stress-reducing-73255</a>
+- Ulrich, R. S., Simons, R. F., Losito, B. D., Fiorito, E., Miles, M. A., & Zelson, M. (1991). Stress recovery during exposure to natural and urban environments. *Journal of Environmental Psychology, 11*, 201–230.
+- Wilms, L., & Oberfeld, D. (2018). Color and emotion: effects of hue, saturation, and brightness. *Psychological Research, 82*, 896–914. Retrieved 12 November, from <a href="https://link.springer.com/article/10.1007/s00426-017-0880-8" target="_blank" rel="noopener noreferrer">https://link.springer.com/article/10.1007/s00426-017-0880-8</a>
