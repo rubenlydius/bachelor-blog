@@ -1,0 +1,61 @@
+---
+title: New Year's goals and flows
+description: "Information architecture: user goals, task flows and a user flow"
+date: 2026-11-07
+author: elitsa
+tags: [ux]
+draft: false
+---
+export const board = 'https://www.figma.com/board/OvVLzZy6et4hOgKfZRv6rX/bachelor';
+
+With our concept defined, it was time to look at it from the visitor's side. What do people actually want from their evening, and what do they need to do at our wall to get there? We worked from big to small: first the user goals, then the task flows, and finally one detailed user flow.
+
+## Setting the goals
+
+We started by writing down a bunch of possible goals for Sarah, our persona, and other visitors. We sorted them into life goals (who they want to be), end goals (what they want to do) and experience goals (how they want to feel). Then we picked the ones our installation can really support, for example:
+
+- **Life goal:** spend real quality time with my family
+- **End goal:** find something kids and adults enjoy at the same time
+- **Experience goal:** feel connected to my family and the people around me
+
+<FigmaEmbed src={board} node="1401-9534" title="User goal braindump and final user goals" caption="User goal braindump and final user goals, sorted into life goals, end goals and experience goals." align="wide" />
+
+## From goals to tasks
+
+Next, we translated the goals into what visitors need to do at the installation: take a light, grow roots, connect with others, watch the wall breathe and leave it for the next group. We made one flow per way of joining in:
+
+- **Join the wall with a torch:** the main flow, where visitors discover the wall and join without any instructions.
+- **Join with your own phone flashlight:** so nobody has to wait for a torch.
+- **Watch first, join later:** for visitors who don't want to jump in straight away.
+- **Grow together:** the more people join, the more the wall grows.
+
+Every flow is short, because visitors only stay a few minutes.
+
+<FigmaEmbed src={board} node="683-6478" title="Our four task flows" caption="Our four task flows, each showing which goals it supports." align="wide" />
+
+## Mapping the whole visit
+
+The task flows show the main paths, but a lot can happen in between. We had different questions about how one or more visitors could actually experience their visit. To answer them, we made one user flow for the whole visit, and looked into (hopefully) all possible decision points and the scenarios that follow from them (just not the one where someone decides to take all our torches :)). It starts with walking into the Pompenzaal and ends with walking on to the next stop.
+
+This is how to read the different shapes we used for the different types of steps:
+
+- **Process:** what the visitor sees or does
+- **Separate process:** what the wall does by itself
+- **Decision:** a choice the visitor makes
+- **Condition:** something that depends on the situation or the tech
+- **Choose point:** one of several ways in (torch, phone or watching)
+- **Navigation:** moving through the hall
+
+<FigmaEmbed src={board} node="941-8604" title="The user flow of the whole visit" caption="The user flow of the whole visit: arriving, joining in, growing roots and leaving." align="wide" ratio="1 / 1" />
+
+The user flow shows the choices a visitor makes, what the wall does in return (the pink rectangles show those separate processes) and the conditions that depend on the situation or the tech, like whether a torch is free or whether the camera sees the light.
+
+## What we learned
+
+Working from goals to task flows to a user flow kept us focused on what visitors want, instead of what we want to build. The user flow was the most useful part: by going through every step, we found situations we hadn't thought about yet. These are now things we want to check during testing.
+
+We didn't create separate flows for the other branches of this big user flow, because we knew they would only cover much smaller parts of the experience. They wouldn't help us as much as the big user flow, with everything inside it.
+
+## Next steps
+
+With the flows in place, we can prepare our first tests with real visitors. In the next post, we set up our testing dashboard and a buy-a-feature test.

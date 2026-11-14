@@ -19,4 +19,5 @@ export const readingOrder: string[] = [
 	'low-poly-high-hopes',
 	'lights-camera-roots',
 	'definitely-defined',
+	'goals-and-flows',
 ];
