@@ -24,4 +24,5 @@ export const readingOrder: string[] = [
 	'the-more-the-merrier',
 	'pinning-our-interests',
 	'lily-gets-a-glow-up',
+	'pretty-spot-on',
 ];

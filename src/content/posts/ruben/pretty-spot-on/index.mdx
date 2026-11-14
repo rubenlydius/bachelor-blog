@@ -1,0 +1,86 @@
+---
+title: Pretty spot on
+description: Turning a crowd of flashlights into stable dots on a wall
+date: 2026-11-13
+author: ruben
+tags: [development]
+draft: false
+---
+import { url as withBase } from '../../../../lib/url';
+import comboTest from './test1.png';
+import debugPage from './tracking.png';
+import cameraController from './camera.png';
+import twoLightsDebug from './testing2.1.png';
+import twoLights from './testing2.2.png';
+import crowdTest from './testing3.png';
+
+Visitors shine a light, and the visuals on the wall respond. Before anything could grow, we needed to know where those lights are. Here's how the tracking came together.
+
+## Wall or crowd?
+
+The camera faces the crowd, not the wall. Getting there took a few experiments from the whole team. At first we had different setups in mind: I imagined tracking where the light comes *from*, my teammates imagined tracking where it *lands* on the wall.
+
+- Elitsa built the wall version: her experiment tracked a phone flashlight's spot on a wall (see <a class="pill" href={withBase('/posts/lights-camera-roots/')}>Lights, camera, roots! →</a>). The visuals stayed on the laptop screen, so they didn't interfere with the camera yet.
+- Miriam built a separate experiment where drawing with the mouse grew roots, leaves and a Blender-modelled flower, a first look at the visuals (see <a class="pill" href={withBase('/posts/lily-gets-a-glow-up/')}>Lily gets a glow-up →</a>).
+- I combined these into one test and added my own experiment with the camera facing the crowd. That way we could compare both setups, with the visuals actually projected.
+
+<Figure src={comboTest} alt="A dark room where someone shines a phone flashlight toward a large projection of glowing green roots and pink flowers, with the tracking settings projected beside it and a laptop on the table" caption="Testing the combined experiment with a short-throw projector and my MacBook camera." align="wide" />
+
+The wall version didn't hold up: it created a feedback loop. Once the visuals are on the wall, the camera sees them too. The visuals react to the light, the camera sees them change, and the tracking reacts to that, a loop nobody controls. Even when we subtracted the visuals from the image, a phone light on the wall was far too dim next to the projector.
+
+Facing the crowd solved this. A flashlight pointed at the camera is the brightest thing in view, the camera never sees the visuals, and each light's position can be mapped onto the wall.
+
+<Breakout variant="plain">"I have no clue what's going on, these are all just vibe-coded experiments."</Breakout>
+
+## Tracking first, visuals later
+
+I wanted to, and had to, understand how the tracking actually works. So I built it from scratch, one stage at a time, with no visuals, testing each stage before the next. It runs in the browser (JavaScript + Vite), with a debug view showing every stage and a clean wall view.
+
+1. **Camera:** each new frame, once, at 1280×720 and 30 fps.
+2. **Brightness grid:** each cell keeps its brightest pixel, so a tiny distant light stays at 255 instead of averaging down to 79.
+3. **Background:** press B with the lights off to store the normal room; only what's brighter counts.
+4. **Mask:** a light can only start where it's very bright, then grows into fairly bright neighbours, so noise can't start one.
+5. **Blobs:** touching cells become one dot; anything too small, too big or not round is dropped.
+6. **Wall mapping:** four dragged corners map the crowd area onto the wall, mirrored.
+7. **Tracker:** gives each light an ID after 3 frames, keeps it through short gaps, and never swaps IDs when lights cross.
+8. **Output:** a list of lights (ID, position, strength) that the visuals read.
+
+<Figure src={debugPage} alt="The tracking debug page: the webcam image with tracked lights circled, a wall view with three numbered dots, every processing stage as a small image, tables of blobs and output, and a column of settings sliders" caption="Behind the scenes: the debug page for the flashlight tracking." align="wide" />
+
+## Fixing what broke
+
+<TwoColumn src={cameraController} alt="The CameraController app with the C270 webcam selected, showing sliders for exposure, gain, brightness, contrast and white balance" caption="Adjusting the camera settings with the CameraController tool." wide narrow>
+
+Most bugs were camera problems, not code problems.
+
+- **Lens ghost:** a faint copy of the light appeared mirrored through the centre of the image, caused by light bouncing inside the lens.
+- **Auto exposure:** the MacBook camera darkened the whole image whenever a light hit it, making other lights harder to track. On a Mac, this can't be switched off.
+
+We switched to a Logitech C270 and locked its exposure, gain and white balance very dark with CameraController. Now only the flashlights stand out, and the ghost stays too faint to detect. The threshold then had to drop from 240 to 135.
+
+**Glare:** a flashlight's big halo got it rejected as "too big". Judging only its bright **hot spot** fixed this and cut the position error from 8.5 to 0.7 cells.
+
+</TwoColumn>
+
+## Testing
+
+### Two flashlights
+
+Our first real test used two lights, and multiple lights still caused small tracking issues. Tuning the light map's two thresholds, high and low, already helped a lot. Adjusting three settings in CameraController fixed the rest: exposure time, gain and brightness.
+
+These may need fine-tuning on site, once we know the distance to the crowd, the brightness of the projection and how dark the room is. The room we tested in is similar to what we expect for the installation.
+
+<ImageRow wide caption="Testing the flashlight tracking with the new code, an external webcam and CameraController.">
+  <Figure src={twoLightsDebug} alt="The tracking debug page with two lights tracked as green dots #23 and #24, and the CameraController window open on top with exposure set to manual" />
+  <Figure src={twoLights} alt="Two people holding up phone flashlights in a dark room, with a laptop in front showing the tracking debug page with two green dots" />
+</ImageRow>
+
+### A small crowd
+
+Next, we gathered more people, with seven lights at once. Tracking stayed accurate, even with everyone moving around. Seven lights shining at the projection didn't wash it out either: with the current projector, distance and darkness, the image stayed clear. And even with just tracking dots on screen, people were already enjoying it, which is a promising sign.
+
+<Figure src={crowdTest} alt="Seven people in a dark room holding up flashlights toward the webcam, with a laptop in front showing each light as a green tracked dot" caption="Testing the flashlight tracking with 7 lights at the same time." align="wide" />
+
+## Next steps
+
+With the tracking sorted, we know where every light is. Now the visuals need to be ready to react to it. In the next post, we go back to Blender: the 3D models for our wall, from the lily and the bulb to the shape keys that let them grow and bloom in code.
