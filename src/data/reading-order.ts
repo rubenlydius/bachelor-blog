@@ -19,4 +19,10 @@ export const readingOrder: string[] = [
 	'low-poly-high-hopes',
 	'lights-camera-roots',
 	'definitely-defined',
+	'goals-and-flows',
+	'test-test-1-2-3',
+	'the-more-the-merrier',
+	'pinning-our-interests',
+	'lily-gets-a-glow-up',
+	'pretty-spot-on',
 ];

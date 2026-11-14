@@ -1,0 +1,79 @@
+---
+title: Test, test, 1, 2, 3
+description: "Preparing our first tests: a buy-a-feature test and a testing dashboard"
+date: 2026-11-08
+author: elitsa
+tags: [ux]
+draft: false
+---
+import consentForm from './consent-form.png';
+
+export const board = 'https://www.figma.com/board/OvVLzZy6et4hOgKfZRv6rX/bachelor';
+
+Our concept is approved and our flows are mapped, but we still don't know which features people actually care about and whether they understand the wall without any instructions. So before building the full installation, we prepared two tests:
+
+- **Round 0, buy-a-feature test:** tests the concept and its features, before there is a prototype
+- **Round 1, usability test:** tests the core interaction with our first prototype
+
+This post is about how we prepared them. The results will follow in the next post.
+
+## Round 0: buy a feature
+
+We ask people from our target audience (kids, parents and older visitors) to "buy" the features they like most with a budget of $60. Because the money runs out, they have to choose, which shows us what they really value.
+
+We test 14 features. Some are the core of our concept, like roots growing from your light and flowers blooming when roots connect. Others are extras from our MoSCoW, like coloured torches that grow different plants, oxygen bubbles, a photo spot or soft sound effects. While participants choose, they think out loud and we write down what they say. We also compare what kids and adults pick, because the installation has to work for both.
+
+<FigmaEmbed src={board} node="1401-9969" title="The buy-a-feature test" caption="The features participants can buy, and the money each person can spend." align="wide" />
+
+## Round 1: the testing dashboard
+
+For the usability test, we used the testing dashboard template from our Experience Design classes. It isn't a full test plan, but it puts the whole test on one page. We filled it in with what we already had: our concept, our user group, the assumptions from our matrix and our design principles.
+
+**What we test:** the core interaction. Visitors shine a torch or phone flashlight on the projected wall, and roots grow from where the light lands. If the light tracking isn't ready in time, a team member follows the light with the mouse (Wizard of Oz).
+
+**What we want to learn:**
+
+- Do people notice they can interact with the wall, and how long before they start?
+- Do they understand that the roots grow from their light?
+- Do they try to connect their roots with someone else's?
+- Does the phone flashlight feel as natural as the torch?
+- What do they think the wall is about?
+
+**Who we test with:** at least 5 people per round, because around 5 users already uncover most usability problems (Nielsen Norman Group). We look for a mix of ages from 5 to 80, ideally families or pairs, so we can also test growing roots together. Kids test together with a parent or guardian, the way they would visit the event.
+
+<FigmaEmbed src={board} node="1401-9973" title="The testing dashboard" caption="The testing dashboard with the product, goals, objectives, participants, procedure and planning." align="wide" />
+
+## How a session goes
+
+To keep every session the same, we split the roles. The interviewer reads the intro and a short scenario: it's a cold winter evening, you're walking the route at Transfo Intiem with your family, and you just walked into a big dark hall. The note-taker stays quiet and writes everything down. If the light tracking isn't ready, we do Wizard of Oz testing with a third person, the "wizard", who makes the wall react with the mouse.
+
+Then the interviewer gives the tasks one by one, without explaining how to do them or giving away the answer:
+
+1. Have a look around. What do you think you can do here?
+2. Can you make the wall change?
+3. Try to fill the wall with as many roots as you can.
+4. Now try to make your roots meet someone else's.
+5. Can you do this without the torch?
+6. Stand back and watch the wall for a moment. What do you think it is about?
+
+None of the tasks say things like "shine the torch on the wall". We really want to see how the tester thinks and reacts, and letting them find it out on their own is exactly the way to do that. After the tasks, we ask a few short questions about what they liked, what was unclear and what the wall made them think of. If they want to add anything, they are free to do so.
+
+<FigmaEmbed src={board} node="521-6464" title="The testing guideline" caption="The testing guideline with the intro, the procedure with the consent form, the tasks and the rules for participants." align="wide" />
+
+## Keeping track
+
+During the session, the note-taker fills in the observation table. Every task is linked to a feature of the installation and gets a score from 1 (unable to do it) to 3 (does it smoothly). Next to the score, we write down what the participant does, says and feels. Right after the session, the interviewer and note-taker go through the table together, while everything is still fresh.
+
+<FigmaEmbed src={board} node="521-6458" title="The observation table" caption="The observation table, with every task linked to a feature and scored from 1 to 3." align="wide" />
+
+Every participant also signs a consent form before the test. For kids, a parent or guardian signs.
+
+<Figure src={consentForm} alt="Consent form for user testing Breathe back to light: the goal of the study, what participants agree to, checkboxes for consenting or not consenting to audio recording, fields for date, name and signature, and contact details of the three team members" caption="The consent form." />
+
+## What we learned
+
+Writing the tasks was harder than we thought. It's easy to give away the answer, so we kept rewriting them until they only describe a goal and not the action. Linking every task to a feature also makes the results easier to use, as we'll see straight away which part of the wall works and which part needs changes. Together, the two tests answer different questions: buy a feature tells us what people want, and the usability test tells us whether they understand what we built.
+
+## Next steps
+
+Between 11 and 19 November, we run both tests with people from our target audience. But before that, we need to work on the base of our concept: the light tracking. In the next post, we explore how we can track multiple lights, rather than just one.

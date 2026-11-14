@@ -1,0 +1,70 @@
+---
+title: Lily gets a glow-up
+description: First visual tryouts
+date: 2026-11-12
+author: miriam
+tags: [design]
+draft: false
+---
+import particlesVideo from './vid1.mov';
+import trackingVideo from './vid2.mov';
+import verticesVideo from './vid3.mov';
+import rootsVideo from './vid4.mov';
+import roots1 from './roots1.png';
+import roots2 from './roots2.png';
+import reference from './visual1.png';
+import lineArt from './visual2.png';
+import breathing1 from './breathing1.png';
+import breathing2 from './breathing2.png';
+
+After we created our styleboard and moodboard, we started with some first visual tryouts. We brought our lily into the browser with Three.js and tried several ways of making it appear and come to life:
+
+- **Particles forming:** the flower appears first as points, then as a wireframe, and finally as the solid flower.
+- **Flower with tracking boxes:** small selection boxes find and follow parts of the flower, for a more technical, "scanning" look.
+- **Vertices growing into a flower:** particles trace the edges of the stem, leaves and petals before the flower fills in.
+
+<ImageRow wide caption="From left to right: particles forming into a flower, flower with tracking boxes, vertices growing into a flower.">
+  <Video src={particlesVideo} ratio={1096 / 1280} title="Particles on a black background forming into the lily, first as points, then as a wireframe, then as the solid flower" />
+  <Video src={trackingVideo} ratio={1096 / 1280} title="The lily with small tracking boxes that find and follow parts of the flower" />
+  <Video src={verticesVideo} ratio={1096 / 1280} title="Particles tracing the edges of the stem, leaves and petals before the lily fills in" />
+</ImageRow>
+
+These tryouts showed us that the flower can appear in many ways, but the more technical looks (like the tracking boxes) felt too digital for the calm feeling we want.
+
+## Coding roots
+
+The second big part was the roots. Based on a growth test from a teammate, we built a page where roots grow from the spot where you shine a flashlight (or, for testing, the mouse). The roots first look like electricity and then turn green and natural. Small leaves and flowers grow along them, the whole system breathes, and after a while the roots dissolve into particles. I also added "fake lights", so we could test what happens when several people interact at once.
+
+<Video src={rootsVideo} title="Roots growing from the cursor on a black background, with leaves and small flowers along them" caption="The coded version: roots growing as they react to the cursor." align="wide" />
+
+## Sketching roots
+
+Besides coding the roots, I also drew them myself, to see how they could look without the limits of the code. Drawing them helped me find the style direction I wanted: thin, flowing branches with small leaves along them, and flowers that grow out of the roots in a few places.
+
+<ImageRow wide caption="Hand-drawn roots with leaves and flowers, as a visual reference for the coded version.">
+  <Figure src={roots1} alt="Hand-drawn thin, branching roots with small leaves and flowers on a dark background" />
+  <Figure src={roots2} alt="Drawn roots with leaves and pink flowers on a dark background, where part of the roots dissolves into small particles" />
+</ImageRow>
+
+## Visual effect
+
+I really liked the line work in the reference image below, and I wanted to recreate something similar for our design. I thought we could do this inside the flower petals and use it as an effect that appears on the flower. Below, the left lily shows the line effect and the right one is the same lily with colour and shading.
+
+<ImageRow wide>
+  <Figure src={reference} alt="Reference image: round, mushroom-like shapes drawn in fine green lines on white" caption="Reference image of line art mushroom-like shapes." />
+  <Figure src={lineArt} alt="Two lilies on a dark background: on the left drawn in fine lines, on the right the same lily with colour and shading" caption="Line art effect on the lily." />
+</ImageRow>
+
+## Breathing effect
+
+Since the main theme of the event is breath, we wanted to show the flowers as if they are breathing. We want to do that with the 3D lily, making it close and open in a slow rhythm, like a calm breath in and out. Below are some stages of opening and closing, showing how it would progress.
+
+<Figure src={breathing1} alt="Five stages of the lily opening, from a closed bud to a fully open flower" align="wide" />
+
+<Figure src={breathing2} alt="Four stages of a lily with long, wavy petals opening, from a closed bud to a fully open flower" caption="Stages of the lily opening and closing, like a slow breath." align="wide" />
+
+These were just first tryouts to get started. We weren't 100% sure yet which effects we could add on top of the 3D, so we still need to experiment a bit more.
+
+## Next steps
+
+But before we continue with the visuals, we need to test if our light tracking actually works, since our whole concept depends on it. In the next post, we test a few of our demos for the projection, figure out how we will track the lights and optimise the code for that, and test our final final v4 tracking code with an audience.

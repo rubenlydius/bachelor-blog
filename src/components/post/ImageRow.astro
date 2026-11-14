@@ -3,14 +3,26 @@ interface Props {
 	/** Number of equal columns. Without it, images share one row at the same height */
 	columns?: number;
 	wide?: boolean;
+	/** One caption under the whole row, instead of under a single image */
+	caption?: string;
 }
 
-const { columns, wide = false } = Astro.props;
+const { columns, wide = false, caption } = Astro.props;
+const style = columns ? `--columns: ${columns}` : undefined;
 ---
 
-<div class:list={['image-row', { wide, grid: columns }]} style={columns ? `--columns: ${columns}` : undefined}>
-	<slot />
-</div>
+{caption ? (
+	<figure class:list={['image-row-group', { wide }]}>
+		<div class:list={['image-row', { grid: columns }]} style={style}>
+			<slot />
+		</div>
+		<figcaption class="mono">{caption}</figcaption>
+	</figure>
+) : (
+	<div class:list={['image-row', { wide, grid: columns }]} style={style}>
+		<slot />
+	</div>
+)}
 
 <style>
 	.image-row {
@@ -31,6 +43,29 @@ const { columns, wide = false } = Astro.props;
 	.image-row + .image-row {
 		margin-top: 1rem;
 	}
+	/* With a caption: the figure takes the outer spacing, the row inside has none */
+	.image-row-group {
+		clear: both;
+		margin: 2.5rem 0;
+	}
+	.image-row-group > .image-row {
+		margin: 0;
+	}
+	/* Same caption style as Figure: a short hairline before the text */
+	figcaption {
+		display: flex;
+		gap: 0.6rem;
+		margin-top: 0.6rem;
+		line-height: 1.4;
+	}
+	figcaption::before {
+		content: '';
+		flex: none;
+		width: 1.25rem;
+		height: 1px;
+		margin-top: 0.65em;
+		background: var(--color-line);
+	}
 	.image-row.grid {
 		display: grid;
 		grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
@@ -45,7 +80,30 @@ const { columns, wide = false } = Astro.props;
 		.image-row {
 			flex-direction: column;
 		}
-		.image-row.grid {
+		/* With a caption: the figure takes the outer spacing, the row inside has none */
+	.image-row-group {
+		clear: both;
+		margin: 2.5rem 0;
+	}
+	.image-row-group > .image-row {
+		margin: 0;
+	}
+	/* Same caption style as Figure: a short hairline before the text */
+	figcaption {
+		display: flex;
+		gap: 0.6rem;
+		margin-top: 0.6rem;
+		line-height: 1.4;
+	}
+	figcaption::before {
+		content: '';
+		flex: none;
+		width: 1.25rem;
+		height: 1px;
+		margin-top: 0.65em;
+		background: var(--color-line);
+	}
+	.image-row.grid {
 			grid-template-columns: 1fr;
 		}
 	}

@@ -210,6 +210,22 @@ a.pill:hover {
 	width: 100vw;
 	margin-inline: calc(50% - 50vw);
 }
+/* Every caption in a post starts with a short hairline, like an annotation leader
+   (also covers videos, YouTube embeds and captioned code blocks) */
+.post-body figcaption {
+	display: flex;
+	gap: 0.6rem;
+	margin-top: 0.6rem;
+	line-height: 1.4;
+}
+.post-body figcaption::before {
+	content: '';
+	flex: none;
+	width: 1.25rem;
+	height: 1px;
+	margin-top: 0.65em;
+	background: var(--color-line);
+}
 /* A new section starts below any floated figure */
 .post-body > h2 {
 	clear: both;

@@ -9,12 +9,14 @@ interface Props {
 	align?: 'center' | 'left' | 'right' | 'wide' | 'full';
 	/** Plays muted on loop like a gif, instead of with controls */
 	loop?: boolean;
+	/** Width / height of the video, e.g. 16 / 9. Lets an ImageRow give every item the same height */
+	ratio?: number;
 }
 
-const { src, title, caption, align = 'center', loop = false } = Astro.props;
+const { src, title, caption, align = 'center', loop = false, ratio } = Astro.props;
 ---
 
-<figure class:list={['figure', 'video', align]}>
+<figure class:list={['figure', 'video', align]} style={ratio ? `--ratio: ${ratio}` : undefined}>
 	{loop ? (
 		<video src={src} aria-label={title} autoplay muted loop playsinline preload="metadata"></video>
 	) : (
