@@ -156,6 +156,10 @@ a.pill {
 	color: var(--color-text);
 	text-decoration: none;
 }
+/* Inline in running text: the small mono pill sits low on the baseline, so lift it to the middle of the line */
+:is(p, li) > .pill {
+	vertical-align: 0.2em;
+}
 a.pill:hover {
 	background: var(--color-text);
 	border-color: var(--color-text);

@@ -27,4 +27,5 @@ export const readingOrder: string[] = [
 	'pretty-spot-on',
 	'plane-and-simple',
 	'room-for-change',
+	'definitely-definitely-defined',
 ];
