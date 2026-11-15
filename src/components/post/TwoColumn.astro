@@ -12,12 +12,16 @@ interface Props {
 	wide?: boolean;
 	/** Image takes a third of the width instead of half, e.g. for tall screenshots */
 	narrow?: boolean;
+	/** Image takes two thirds of the width instead of half */
+	large?: boolean;
+	/** Text starts at the top of the image instead of being centred next to it */
+	top?: boolean;
 }
 
-const { src, alt, caption, reverse = false, wide = false, narrow = false } = Astro.props;
+const { src, alt, caption, reverse = false, wide = false, narrow = false, large = false, top = false } = Astro.props;
 ---
 
-<section class:list={['two-column', { reverse, wide, narrow }]}>
+<section class:list={['two-column', { reverse, wide, narrow, large, top }]}>
 	<figure>
 		{typeof src === 'string' ? (
 			<img src={src.startsWith('/') ? url(src) : src} alt={alt} loading="lazy" />
@@ -40,6 +44,9 @@ const { src, alt, caption, reverse = false, wide = false, narrow = false } = Ast
 		clear: both;
 		margin: 3rem 0;
 	}
+	.top {
+		align-items: start;
+	}
 	.reverse figure {
 		order: 2;
 	}
@@ -48,6 +55,12 @@ const { src, alt, caption, reverse = false, wide = false, narrow = false } = Ast
 	}
 	.narrow.reverse {
 		grid-template-columns: 2fr 1fr;
+	}
+	.large {
+		grid-template-columns: 2fr 1fr;
+	}
+	.large.reverse {
+		grid-template-columns: 1fr 2fr;
 	}
 	figure {
 		margin: 0;
@@ -71,12 +84,17 @@ const { src, alt, caption, reverse = false, wide = false, narrow = false } = Ast
 		margin-top: 0.65em;
 		background: var(--color-line);
 	}
+	.text :global(> :first-child) {
+		margin-top: 0;
+	}
 	.text :global(> :last-child) {
 		margin-bottom: 0;
 	}
 	@media (max-width: 640px) {
 		.two-column,
-		.narrow.reverse {
+		.narrow.reverse,
+		.large,
+		.large.reverse {
 			grid-template-columns: 1fr;
 		}
 		.reverse figure {

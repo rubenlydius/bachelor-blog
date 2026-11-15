@@ -25,4 +25,8 @@ export const readingOrder: string[] = [
 	'pinning-our-interests',
 	'lily-gets-a-glow-up',
 	'pretty-spot-on',
+	'plane-and-simple',
+	'room-for-change',
+	'definitely-definitely-defined',
+	'styleboard-final-final-v4',
 ];
