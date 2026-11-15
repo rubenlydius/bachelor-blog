@@ -1,0 +1,145 @@
+---
+title: Plane and simple
+description: "3D modelling: a realistic lily, leaves and a bulb in Blender, with shape keys that let them bloom, breathe and sway in code"
+date: 2026-11-13
+author: elitsa
+tags: [design]
+draft: false
+---
+import lilyClose from './lily-close.png';
+import lilyVersions1 from './lily-versions-1.png';
+import lilyVersions2 from './lily-versions-2.png';
+import petals from './petals.png';
+import petal from './petal.png';
+import flowerSheet from './flower-sheet.png';
+import leafTexture1 from './leaf-texture-1.png';
+import leafTexture2 from './leaf-texture-2.png';
+import leaves from './leaves.png';
+import shading from './shading.png';
+import uvEditing from './uv-editing.png';
+import growthResearch from './growth-research.png';
+import inspo from './inspo.png';
+import bulbs from './bulbs.png';
+import shapeKeysVideo from './shape-keys.mov';
+import testPageVideo from './test-page.mov';
+import bulbVideo from './bulb.mov';
+
+Our low-poly lily generator was a good start, but for our style we wanted to try flowers that look a bit more realistic, and that can grow, bloom and breathe on the wall. So I learned to model a lily myself in Blender and figured out how to make it move in a way that also works in code.
+
+## Learning from tutorials
+
+I had never modelled a flower before, so I started with tutorials. One of them was even about a lily, and the other one was about a hibiscus (the video it was based on):
+
+- <a href="https://www.youtube.com/watch?v=m3ZBdvt06Ps" target="_blank" rel="noopener noreferrer">https://www.youtube.com/watch?v=m3ZBdvt06Ps</a>
+- <a href="https://www.youtube.com/watch?v=wRcL0CPljMA" target="_blank" rel="noopener noreferrer">https://www.youtube.com/watch?v=wRcL0CPljMA</a>
+
+## Plane and simple petals
+
+Every petal starts as a plain plane. I shaped and bent it into a petal, and then gave it a photo of a real lily petal as its texture. In the Shading tab, the image goes into the Base Color of the material, and I adjusted settings like the roughness until it looked soft instead of plastic. Then I went into UV editing to map the petal to the image. After the petals, I made the stem, the stamens and the leaves, and added more textures. In the end I had a few versions of the lily, from wide open to more trumpet-shaped and curled, and four kinds of leaves.
+
+<ImageRow wide caption="Different versions of my lily, all made from planes with photo textures.">
+  <Figure src={lilyClose} alt="Two pink lilies in Blender, close up, with green stems and red-tipped stamens on a grey background" />
+  <Figure src={lilyVersions1} alt="Three pale pink lilies in a row on the Blender grid, from wide open to more closed" />
+  <Figure src={lilyVersions2} alt="Three pink lilies on the Blender grid, with stems, stamens and small leaves" />
+</ImageRow>
+
+<ImageRow wide caption="The photo textures of each flower.">
+  <Figure src={petals} alt="Loose pink lily petals on a white background, some dark pink and curled, some pale with dark spots" />
+  <Figure src={petal} alt="A single pale pink lily petal with a green base and small dark spots" />
+  <Figure src={flowerSheet} alt="A sheet of pink lily parts on white: two open flowers, three petals, stamens, two leaves and a stem" />
+</ImageRow>
+
+<ImageRow wide caption="The modelled leaves (right) and their photo textures (left).">
+  <Figure src={leafTexture1} alt="Photo textures of two long green lily leaves and a stem on white" />
+  <Figure src={leafTexture2} alt="A photo of two bright green leaves on one stem, on white" />
+  <Figure src={leaves} alt="Four modelled green leaves in Blender, from two wide ones to two narrow ones" />
+</ImageRow>
+
+<ImageRow wide caption="Updating the texture in the Shading tab and mapping it in the UV Editing tab.">
+  <Figure src={shading} alt="Blender's Shading tab with three lilies at the top and the node editor below, an image texture plugged into the Base Color of a Principled BSDF" />
+  <Figure src={uvEditing} alt="Blender's UV Editing tab: on the left the leaf's mesh laid over its photo texture, on the right the textured leaf in 3D" />
+</ImageRow>
+
+## Making it move
+
+Next, I wanted the flowers to move. My first idea was to animate them in Blender with Geometry Nodes or the cloth simulator, which can make petals bend really naturally:
+
+- <a href="https://www.youtube.com/watch?v=VVK7n9rMsHI" target="_blank" rel="noopener noreferrer">https://www.youtube.com/watch?v=VVK7n9rMsHI</a>
+- <a href="https://www.youtube.com/watch?v=XS3JpWs9sIg" target="_blank" rel="noopener noreferrer">https://www.youtube.com/watch?v=XS3JpWs9sIg</a>
+
+But then I found out that those animations don't come along when you export the model to code. A simulation or a node setup only exists inside Blender. So I looked into shape keys instead:
+
+- <a href="https://www.youtube.com/watch?v=B11XBZmIIZc" target="_blank" rel="noopener noreferrer">https://www.youtube.com/watch?v=B11XBZmIIZc</a>
+- <a href="https://www.youtube.com/watch?v=p5syxlEsc7U" target="_blank" rel="noopener noreferrer">https://www.youtube.com/watch?v=p5syxlEsc7U</a>
+
+A shape key is a second version of the same model, where the same points are just moved somewhere else. For example, one key where the lily is a closed bud, and one where it's fully open. When I export the model, the shape keys come along as morph targets, and in code each one is a value from 0 to 1. That way I can mix them live: half open, a little breath, a bit of wind.
+
+I made these shape keys:
+
+- **Lilies:** bloom (from closed bud to open flower), breathe, and two sway keys for wind.
+- **Leaves:** grow, breathe, two sway keys, curl (the tip rolls back) and roll (the edges roll up).
+
+<ImageRow wide caption="Adjusting the different values of the animation, based on lily growth research.">
+  <Figure src={growthResearch} alt="A growth research board: photos of the stages of a lily opening from bud to full flower, bulbs sprouting, and lilies growing from bulb to bloom" />
+  <Video src={shapeKeysVideo} ratio={1280 / 688} title="A pink lily in Blender with the Shape Keys panel open, its bloom, breathe and sway values being changed" />
+</ImageRow>
+
+## Testing in code
+
+To test the animations, I loaded the models into a small Three.js page with sliders for bloom, breathe and sway, and a button that breathes automatically: 4 seconds in, 6 seconds out. A flower only breathes as much as it's open, so a closed bud stays still. The sway is made from two slow waves that are out of sync, so it never looks like the same loop over and over.
+
+<figure class="wide">
+
+```js
+for (const m of lilyMeshes) {
+  const d = m.morphTargetDictionary; // shape key name → index
+  m.morphTargetInfluences[d.bloom] = bloom;
+  m.morphTargetInfluences[d.breathe] = breath * bloom; // only breathe when open
+  // idle sway: two slow, out-of-phase waves, so the wind never looks looped
+  m.morphTargetInfluences[d.sway_a] = swayA * swayAmount * bloom;
+  m.morphTargetInfluences[d.sway_b] = swayB * swayAmount * bloom;
+}
+```
+
+<figcaption class="mono">Every frame, the shape keys from Blender are mixed in code with values from 0 to 1.</figcaption>
+</figure>
+
+As I was coding, I also looked into different lily variants. I saw some lilies' petals roll way back, so I added a new shape key for curl. And now every leaf also gets its own timing and a random amount of curl and roll, so they don't all move together.
+
+<Figure src={inspo} alt="Flower inspiration board: pink, white, orange and yellow lilies, some with petals that roll far back" caption="My flower inspo board." align="wide" />
+
+<Video src={testPageVideo} title="The Three.js test page: sliders for bloom, breathe, sway, leaves and bulb next to several lilies and a bulb on a black background, the lilies opening and moving" caption="The lily blooming, breathing and swaying." align="wide" />
+
+## Lilies don't grow from seeds
+
+For our first scene, we planned to water seeds. Then I found out that lilies don't grow from seeds like that, but from bulbs. So I looked at real lily bulbs and made a few versions. Some looked too much like garlic cloves, others like an onion or even an artichoke. In the end I took one and adjusted it myself until it looked right. I added photo textures for the bulb skin, the roots and the shoot.
+
+<ImageRow wide caption="From garlic-like to artichoke-like, to my final version, and the final bulb waking up.">
+  <Figure src={bulbs} alt="Photos of real lily bulbs next to sketches, then several modelled bulbs in Blender, from garlic-like and artichoke-like to the final bulb with roots and a green shoot" />
+  <Video src={bulbVideo} ratio={564 / 854} title="The final bulb on a black background waking up: roots grow out from underneath" />
+</ImageRow>
+
+The bulb got its own shape keys: sprout, breathe and three groups of roots that start growing one after another. At the tip of the shoot, I placed an invisible marker, so later I can grow the stem even more (subject to change). When the bulb wakes up, the roots grow first, then the shoot appears.
+
+<figure class="wide">
+
+```js
+const t = (now - bulb.wakeStart) / 1000; // seconds since the bulb woke up
+// roots
+bulb.roots = ease(clamp01(t / 3));
+// shoot
+bulb.sprout = ease(clamp01((t - 1.5) / 3));
+```
+
+<figcaption class="mono">The timing of a waking bulb: first the roots, then the shoot.</figcaption>
+</figure>
+
+## What I learned
+
+- Modelling with planes and photo textures is a quick way to get realistic-looking flowers that are still light enough for real time.
+- Think about the export early, because not everything you make in Blender works in code, and shape keys turned out to be the bridge between the two.
+- Check the real thing, a lesson I should have learned by now. You would think that looking up how lilies actually grow is the first thing we researched, but no: they grow from bulbs.
+
+## Next steps
+
+While the models were taking shape, our place in the Pompenzaal was changing too. In the next post, we explain how the room plans changed three times, and where our installation will finally be.
