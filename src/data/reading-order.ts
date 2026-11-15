@@ -28,4 +28,5 @@ export const readingOrder: string[] = [
 	'plane-and-simple',
 	'room-for-change',
 	'definitely-definitely-defined',
+	'styleboard-final-final-v4',
 ];
