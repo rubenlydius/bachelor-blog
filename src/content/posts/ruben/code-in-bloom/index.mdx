@@ -1,0 +1,114 @@
+---
+title: Code in bloom
+description: "How the two scenes are built with code"
+date: 2026-11-18
+author: ruben
+tags: [development]
+draft: false
+---
+import { url as withBase } from '../../../../lib/url';
+import versions1 from './versions-1.png';
+import versions2 from './versions-2.png';
+import physarum1 from './physarum-1.png';
+import physarum2 from './physarum-2.png';
+import water1 from './water-1.png';
+import water2 from './water-2.png';
+import water3 from './water-3.png';
+import referenceDrawing from './reference-drawing.png';
+import rootsWater1 from './roots-water-1.png';
+import rootsWater2 from './roots-water-2.png';
+import connection1 from './connection-1.png';
+import connection2 from './connection-2.png';
+import flowers1 from './flowers-1.png';
+import flowers2 from './flowers-2.png';
+import holdingStill1 from './holding-still-1.png';
+import holdingStill2 from './holding-still-2.png';
+
+The tracking tells us where every light is (see <a class="pill" href={withBase('/posts/pretty-spot-on/')}>Pretty spot on →</a>). Now something has to happen there. Our wall has two scenes: one where water wakes up a sleeping root network, and one where lights meet and a lily blooms between them. Here's how both were built.
+
+## Overall structure
+
+Every scene started as a small experiment: a separate web page (JavaScript/TypeScript + Vite) with a panel of sliders to tune it live.
+
+- **The mouse first:** holding the mouse button counts as a flashlight, so I could test at my desk. The visuals only read a list of lights, so the tracking could later replace the mouse without changing anything else.
+- **The right tool per layer:** the roots are drawn on a 2D canvas, the water runs on the GPU (WebGPU), and the flowers are 3D models in Three.js. Each layer has its own canvas, stacked on top of each other.
+- **Versions, not rewrites:** each new version was a copy with one thing added, so I could always compare.
+
+<ImageRow wide caption="Building up through the different versions, step by step.">
+  <Figure src={versions1} alt="Version 1 of the connection experiment: two lights drawn as plain black circles on white, with a slider panel for the outer and inner radius" />
+  <Figure src={versions2} alt="Version 2 of the same experiment on a dark background: a green root trail follows the light toward a second light, with the circles still visible for debugging" />
+</ImageRow>
+
+## Scene 1: bulbs, roots and water
+
+### Growing toward the light
+
+The first experiment had roots that grow toward light. Thousands of tiny agents, modelled on slime mould (physarum), follow each other's trails and form veins. It looked alive, but it was too creepy for a calm installation with the theme "breath".
+
+<ImageRow wide caption="Different visualisations with physarum as the reference.">
+  <Figure src={physarum1} alt="Dark vein-like network on warm paper-coloured background, growing up from the bottom toward the light cursor, with a physarum slider panel" />
+  <Figure src={physarum2} alt="The same simulation in a lung-shaped preset: dark branching veins spreading out from one trunk on warm paper" />
+</ImageRow>
+
+### Adding water
+
+The second version added water. It rests in pools, and when you press and drag, a stream of particles follows your path and falls back when you let go. The particles feel pressure, tension and gravity, and water that touches a root runs along it.
+
+<ImageRow wide caption="Dragging the water around. Water particles are slightly magnetic to the roots.">
+  <Figure src={water1} alt="Pale yellow roots spreading from one point above a pool of blue water, with the cursor pulling a small stream up out of the pool" />
+  <Figure src={water2} alt="A blob of blue water dragged up toward the roots, leaving a trail of particles" />
+  <Figure src={water3} alt="The dragged water released near the roots, its particles clinging to the branches" />
+</ImageRow>
+
+<TwoColumn src={referenceDrawing} alt="Drawing of grey branching roots spreading from a central hub, with glowing orange bulbs on the branches and white pipes in two corners" caption="Reference drawing in Figma for scene 1." reverse wide top>
+
+### A root network to wake up
+
+The generated roots never looked like ours, so for `r-newscreen1` we started from a drawing. A small script traces it into branches around one central hub, and each branch sways slowly, as if breathing.
+
+</TwoColumn>
+- **Dim by default:** the roots sit at 5% opacity on black, light up where the water passes, then slowly fade back.
+- **Water from the light:** while a light is on, water comes straight out of it, follows its path, and dries up after it lets go.
+- **Bulbs:** when the water touches a bulb, small roots grow out of its bottom and a sprout grows up from its top. This is the start of the lily on the other screen.
+
+<ImageRow wide caption="Combining glowing roots, dragging water around and seeds sprouting.">
+  <Figure src={rootsWater1} alt="The traced root network dimmed on black with peach bulbs on the branches, and a blob of blue water at the centre where the light is" />
+  <Figure src={rootsWater2} alt="Water reaching a bulb on the left: the bulb sprouts small roots, and the root branch the water travelled along glows green" />
+</ImageRow>
+
+## Scene 2: stems, connecting and lilies blooming
+
+### The logic, without styling
+
+I built the bare logic with plain circles first. Every light has an outer and an inner circle. When the outer circles touch, a line grows between the lights. When the inner circles touch, they're connected, and they stay connected until the outer circles separate again, so the connection doesn't flicker.
+
+<ImageRow wide caption="Figuring out the connection logic.">
+  <Figure src={connection1} alt="Two lights as black outer and inner circles on white, with dotted lines growing toward each other where the outer circles overlap" />
+  <Figure src={connection2} alt="Two lights connected on a dark background: a green root trail between them and a flower on a stem where they meet, with the debug circles shown" />
+</ImageRow>
+
+### Roots, trails and a flower
+
+Next, every light drew a root trail with leaves: short when moving fast, long when moving slowly. Connections now happen between trails: two roots grow toward each other and a 3D lily grows where they meet. The first lily had a stem, which looked like a stick from above, so it went. Now the flower opens right on the meeting point.
+
+<ImageRow wide caption="Flowers growing where 2 root trails meet. First with stem, then without.">
+  <Figure src={flowers1} alt="Long green root trails with small leaves crossing each other, with pale blue lilies on stems where they meet" />
+  <Figure src={flowers2} alt="Root trails forming a triangle, with pale lilies opening directly on the meeting points, without stems" />
+</ImageRow>
+
+### Holding still
+
+A light that holds still drew nothing, which felt dead. Now three twigs sprout from it, at least 60° apart, taking turns to pull in and grow out elsewhere. Their tips also count as connection points, so a moving light can still connect to someone standing still.
+
+<ImageRow wide caption="Flowers growing where 2 root trails meet, now also with idling lights.">
+  <Figure src={holdingStill1} alt="A moving light drawing a long green root trail, and a light standing still below it with three small twigs sprouting from it" />
+  <Figure src={holdingStill2} alt="A twig from the still light reaching the moving light's trail, with a lily blooming where they meet" />
+</ImageRow>
+
+## Bringing it together
+
+`r-testing2` combines both scenes with the flashlight tracking, with a switch to swap between them. Every flashlight gets its own trail in scene 2 and its own water in scene 1, so we can easily simulate the installation for user testing.
+
+## Next steps
+
+Next, we test both scenes on a projection with users: how people interact, what they think about it, and whether everything runs smoothly with many lights at once. We're also making a 3D version of the room to get a better feeling of how the actual installation will be.

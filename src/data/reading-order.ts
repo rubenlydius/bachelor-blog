@@ -32,4 +32,5 @@ export const readingOrder: string[] = [
 	'its-getting-a-little-blurry-in-here',
 	'spend-once-test-twice',
 	'scenic-struggling',
+	'code-in-bloom',
 ];
