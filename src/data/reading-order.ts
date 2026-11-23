@@ -34,4 +34,5 @@ export const readingOrder: string[] = [
 	'scenic-struggling',
 	'code-in-bloom',
 	'hallo',
+	'pitch-perfect',
 ];
