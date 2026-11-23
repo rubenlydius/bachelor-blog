@@ -30,4 +30,5 @@ export const readingOrder: string[] = [
 	'definitely-definitely-defined',
 	'styleboard-final-final-v4',
 	'its-getting-a-little-blurry-in-here',
+	'spend-once-test-twice',
 ];
