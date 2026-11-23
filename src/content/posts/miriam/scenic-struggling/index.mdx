@@ -1,0 +1,79 @@
+---
+title: Scenic struggling
+description: "Searching for the first scene: water, seeds and electricity"
+date: 2026-11-17
+author: miriam
+tags: [design]
+draft: false
+---
+import overview1 from './overview-1.png';
+import overview2 from './overview-2.png';
+import waterBottom1 from './water-bottom-1.png';
+import waterBottom2 from './water-bottom-2.png';
+import waterBottom3 from './water-bottom-3.png';
+import waterBottom4 from './water-bottom-4.png';
+import lightWater1 from './light-water-1.png';
+import lightWater2 from './light-water-2.png';
+import blobs1 from './blobs-1.png';
+import blobs2 from './blobs-2.png';
+import chosen1 from './chosen-1.png';
+import chosen2 from './chosen-2.png';
+
+The first scene turned out to be much harder than we expected. We knew what we wanted to tell, but not how to show it. The Pompenzaal was once used as a water pump, and water is one of the things a plant needs for photosynthesis, so we wanted to show water. We also wanted to show seeds that start to grow, and electricity, since the Transfo was a power plant.
+
+On top of that, the first scene also had to connect to the second projection, where the flowers grow. The problem was putting all of this together in a way that makes sense conceptually, looks good and connects to the second projection.
+
+<ImageRow wide caption="First sketches of the first scene and how it connects to the second projection.">
+  <Figure src={overview1} alt="Sketch on black: white electricity lines holding orange seeds above blue water outlines at the bottom, with a pipe leading off to the right" />
+  <Figure src={overview2} alt="Sketch on black: a white pipe coming in from the left, white root lines, and green stems with blue lilies blooming, some dissolving into particles" />
+</ImageRow>
+
+## Idea 1: Water at the bottom
+
+Our first idea was to put water at the bottom of the screen, with electricity roots above it holding small seeds. Visitors could drag the water up towards the seeds with their light, and the seeds would start to grow. We liked that the water would really feel like something you bring to the plants, just like the pump room once pumped water.
+
+We had different ideas for what happens next: the seeds could fall into the water and travel through a pipe to the second projection, or the water could rise, cover the whole scene, take the seeds with it and flow back down.
+
+However, when we sketched it out, it looked messy and didn't feel right. There was too much happening at the same time: the water, the roots, the seeds and the pipes were all competing for attention, and it was not clear what visitors should focus on.
+
+<ImageRow wide columns={2} caption="Idea 1: water at the bottom, rising up into the glowing electricity roots.">
+  <Figure src={waterBottom1} alt="Glowing white electricity roots spreading out above a layer of blue water, with a stream of water rising into the centre and a grey pipe on the right" />
+  <Figure src={waterBottom2} alt="The same sketch with a copper-coloured pipe running into and through the water" />
+  <Figure src={waterBottom3} alt="A variation of the water rising into the electricity roots, with a different pipe" />
+  <Figure src={waterBottom4} alt="Another variation of the water at the bottom with electricity roots above it" />
+</ImageRow>
+
+## Idea 2: Your light is the water
+
+We decided that the water at the bottom was making the visuals too busy, so we dropped it. Instead, we thought we could make people's flashlights the water source: wherever people shine their light, they will see a water blob around that spot, and they can move it around the electricity. This felt more direct, because the visitor's light itself becomes the thing that brings life. We were thinking that the water could spread around between the roots as well, and the roots could grow in between the water. However, this again felt too busy.
+
+Then we thought to just simplify it by placing several seeds on the electricity that people can interact with: once their flashlight reaches them, they would grow. This way, people would have a clear goal while moving their light around.
+
+<ImageRow wide caption="Idea 2: your light is the water. Left: water spreading between the roots. Right: the simpler version with glowing seeds.">
+  <Figure src={lightWater1} alt="White electricity roots spreading from the centre with blue water patches between them, small brown seeds along the branches and green pipes in two corners" />
+  <Figure src={lightWater2} alt="Grey electricity roots spreading from the centre with glowing orange seeds along the branches and white pipes in two corners" />
+</ImageRow>
+
+## Idea 3: Water blobs with electricity inside
+
+Another idea was that every visitor's light creates a small blob of water with electricity inside it. When two blobs meet, they merge and the electricity turns into roots, so something only grows when people connect. We liked the idea of the water blob with the electricity inside, because it combined the water and the electricity in one simple shape, and it encouraged people to work together.
+
+However, this idea moved quite far from what we had before, and we were not sure how to connect it to the rest of the concept and what would happen after the roots appear. It also raised new questions, like what happens when only one person is in the room.
+
+<ImageRow wide caption="Idea 3: water blobs with electricity inside. When blobs meet, they merge and roots start to grow.">
+  <Figure src={blobs1} alt="Three separate blue water blobs with white electricity inside, floating on black between dark pipes" />
+  <Figure src={blobs2} alt="Two small water blobs next to a bigger merged blob, where the electricity has turned into orange roots with a small green sprout on top" />
+</ImageRow>
+
+## Planning how to continue
+
+In our Figma file, we sketched out what we could do with the first scene and how to approach it. After trying many different directions, we realised we had to make a choice to move on. We decided to go with a version that has the electricity on low opacity by default, with glowing seeds on it. Users can shine their light on the screen to create water, and they can use this water to grow the seeds. We wanted to build a working version in code as well, to see how the interaction would feel and whether the meaning behind it would be clear.
+
+<ImageRow wide caption="The direction we chose: low-opacity electricity with glowing seeds, and light that creates water to grow them.">
+  <Figure src={chosen1} alt="Grey electricity roots with glowing peach seeds, blue streaks of water drawn by lights, and one seed sprouting orange roots and a green shoot" />
+  <Figure src={chosen2} alt="The same scene with the electricity at low opacity and dark pipes in the corners, so the seeds and water stand out" />
+</ImageRow>
+
+## Next steps
+
+Next, we need to bring this interaction to life in code. Building it will help us test how it feels and whether the meaning comes across.
