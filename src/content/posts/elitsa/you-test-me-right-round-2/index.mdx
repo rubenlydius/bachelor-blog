@@ -1,0 +1,103 @@
+---
+title: You test me right round 2
+description: "Applying round 1's feedback and testing both scenes with a group"
+date: 2026-11-21
+author: elitsa
+tags: [ux]
+draft: false
+---
+import { url as withBase } from '../../../../lib/url';
+import signRound1 from './sign-round-1.png';
+import signRound2 from './sign-round-2.png';
+import scene1 from './scene-1.png';
+import scene2 from './scene-2.png';
+
+export const board = 'https://www.figma.com/board/OvVLzZy6et4hOgKfZRv6rX/bachelor';
+
+## What we changed after round 1
+
+Round 1 gave us a clear to-change list (see <a class="pill" href={withBase('/posts/spend-once-test-twice/')}>Spend once, test twice →</a>), so before round 2 we worked through most of it:
+
+- Less blur and less movement, so the flowers don't look like they vanish
+- Leaves on the stems (but not animated, yet?)
+- Roots that stay longer: move fast and the trail is short, move slowly and it gets longer
+- Flowers that appear reliably where roots connect, so it's easier to understand
+- Buttercups for normal growth, so the lilies stand out as the flower you get from connecting
+- A first, simple version of scene 1
+- A clearer picture sign
+
+Still open from round 1: making the breathing clearer, a short text to read after the installation, and sound.
+
+## A clearer sign
+
+In round 1, the sign was just a few pictures without any words, and one tester had to look at it a few times to understand what to do. For round 2 we made a clearer version. It worked much better: the group knew right away to use their flashlight.
+
+<ImageRow wide columns={2} bottom caption="Left: the improved sign we used in round 2. Right: our first sign, only pictures.">
+  <Figure src={signRound2} alt="The improved sign: a drawn torch and a phone with its flashlight on, lighting up a yellow beam, and the text Turn on FLASHLIGHTS" />
+  <Figure src={signRound1} alt="The first sign: a phone flashlight OR a torch, plus a person shining a light into the night sky, with no words" />
+</ImageRow>
+
+## How it looked
+
+<ImageRow wide caption="Scene 1 and the updated scene 2, as we tested them in round 2 (visuals from the 3D hall model).">
+  <Figure src={scene1} alt="Scene 1 on the wall of the 3D hall: a dim root network with peach bulbs, and a blob of blue water where the light is, lighting up the roots around it" />
+  <Figure src={scene2} alt="Scene 2 on the wall of the 3D hall: a green root trail with small yellow buttercups and a pale lily where two lights' roots meet" />
+</ImageRow>
+
+## Round 2: one group of three
+
+We tested a simple version of scene 1 together with the updated scene 2. We didn't have 2 cameras or 2 projectors, so we switched between the scenes ourselves. This time we tested with a group of three at once. At the festival, people come with friends and share the wall with strangers, so we wanted to see how they figure it out together.
+
+We added tasks for scene 1, and a few extra questions: what should happen when all the bulbs have sprouted, when they would stop playing and walk on, whether they would take a torch or use their phone, and more.
+
+<ImageRow wide caption="The tasks, more or less (left), vs the whole conversation (right).">
+  <FigmaEmbed src={board} node="1964-13372" title="Round 2 tasks and questions" ratio="4 / 5" />
+  <FigmaEmbed src={board} node="1964-13561" title="Round 2: the whole conversation with the testers" ratio="4 / 5" />
+</ImageRow>
+
+## What we found
+
+- The meaning of scene 1 came across without any context. The group described it as "the essentials of life" and "breathing life into something".
+- Scene 2 was the most fun. They played, drew and wrote with their lights, and found out by themselves that connecting makes a flower, and that moving slower makes the lines last longer.
+- The bulbs looked like dots or molecules, not seeds. They need the 3D models.
+- Scene 1 has no clear end, because the bulbs shrink back when the light moves away.
+- Nobody saw the breathing on their own. The flowers disappear too fast to see them pulse.
+- They want to read about the meaning at the end, not on the projection.
+- One tester suggested more electricity, like a plasma ball, with the current running from seed to seed.
+
+## Round 1 vs round 2
+
+What got better:
+
+- The meaning came across much better. In round 1, people mostly said "flowers grow from light". Now they talked about the essentials of life, without us explaining anything.
+- The connection is clear: they found out how flowers appear on their own.
+- The sign worked: everyone started right away.
+- People still drew and wrote, but on their own, not because of our task.
+
+What didn't change yet:
+
+- The breathing still doesn't come across.
+- People still prefer to read about the meaning after playing. From our pitch, some would also like just a little something at the beginning (see <a class="pill" href={withBase('/posts/pitch-perfect/')}>Pitch perfect →</a>).
+- There is still no sound.
+
+And something else: with scene 1 added, we might have to discuss whether it needs a clear ending or can stay open. Both have their advantages and disadvantages. Without a clearer ending, people might spend too much time on it. But if it is more structured, it might remove the exploratory side of it and the freedom that the testers have enjoyed until now.
+
+## Our to-change list
+
+All the feedback and suggestions went into a new to-change list. The stamps show what we are already working on.
+
+<FigmaEmbed src={board} node="1964-13562" title="To-change list after round 2" caption="Our to-change/suggestions list after round 2, grouped by visuals, interaction, meaning, other, and testing." align="wide" />
+
+## Plan for round 3
+
+- Test the new version with about 5 people: one group and a couple of people on their own
+- Use both projections at once, like it will be in the hall
+- Bring a real basket of torches and see what people pick
+- Keep the core tasks the same, so we can compare the rounds
+- Check our fixes: do the bulbs look like seeds, does scene 1 feel finished, and do people see the breathing without help?
+
+## Next steps
+
+Next, we apply the feedback, finish scene 1, and keep working on both scenes in general: the styling and all the small details.
+
+At the same time, we begin working on the promotional text and visuals, and the signs that will go in the installation hall. Next up: Sign the design!
