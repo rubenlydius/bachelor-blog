@@ -33,4 +33,5 @@ export const readingOrder: string[] = [
 	'spend-once-test-twice',
 	'scenic-struggling',
 	'code-in-bloom',
+	'hallo',
 ];
