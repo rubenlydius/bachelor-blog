@@ -1,0 +1,112 @@
+---
+title: It's getting a little blurry in here
+description: "First tryouts with the new style on the second projection"
+date: 2026-11-16
+author: miriam
+tags: [design, development]
+draft: false
+---
+import breathing1 from './breathing-1.png';
+import breathing2 from './breathing-2.png';
+import breathing3 from './breathing-3.png';
+import breathingSliders from './breathing-sliders.png';
+import particles1 from './particles-1.png';
+import particles2 from './particles-2.png';
+import particles3 from './particles-3.png';
+import oxygen1 from './oxygen-1.png';
+import oxygen2 from './oxygen-2.png';
+import oxygen3 from './oxygen-3.png';
+import seeThrough1 from './see-through-1.png';
+import seeThrough2 from './see-through-2.png';
+import seeThrough3 from './see-through-3.png';
+import roots1 from './roots-1.png';
+import roots2 from './roots-2.png';
+import variety1 from './variety-1.png';
+import variety2 from './variety-2.png';
+import variety3 from './variety-3.png';
+
+## First tryouts on our lily
+
+After we created our new styleboard, it was time to bring it to life for our concept. I started experimenting in code, by adding new visual effects on top of our 3D lily model.
+
+The first effect I added was motion blur on the breathing. In our styleboard, we wanted the visuals to feel soft and dreamy, as if the movement leaves a trace behind it, like in long exposure photography. So while the lily slowly opens and closes, it leaves soft trails of itself behind, which makes the breathing feel calmer and more alive.
+
+To find the right look, I added sliders for all the values:
+
+- **Breathing:** how long the flower breathes in and out, how far it opens and closes, and how much it turns and sways while moving.
+- **Long exposure:** how long the trails stay visible, how many copies of the flower they are made of, how soft they are and how much they smear along the movement.
+
+<ImageRow wide caption="The breathing lily with long exposure trails, and the sliders I used to tune it.">
+  <Figure src={breathing1} alt="A coral lily on a black background, its petals softly blurred with faint trails from the breathing movement" />
+  <Figure src={breathing2} alt="The same lily mid-breath, with blurred trails along the petals" />
+  <Figure src={breathing3} alt="The lily from a slightly different angle, softly blurred by the motion trails" />
+  <Figure src={breathingSliders} alt="Slider panel with Breathing settings (breath in and out time, how far it opens and closes, turn, sway) and Long exposure settings (exposure time, copies, trail fade, softness, streaks, afterglow)" />
+</ImageRow>
+
+## Particles during breathing
+
+In the next tryout, I added particles on top of the breathing movement. As the flower slowly opens and closes, small particles scatter from its petals and gradually fade away. I played with how many particles there are, how big they are, how far they spread and how long they stay. They take their colour from the petals, get a soft blur and also show up in the long exposure trails.
+
+To make them blend better with the flower, I also made the petal edges dissolve slightly and gave the petals a soft watercolour look.
+
+<ImageRow wide caption="Particles scattering from the petals while the lily breathes.">
+  <Figure src={particles1} alt="The coral lily with tiny glowing particles scattering from the edges of its petals" />
+  <Figure src={particles2} alt="The lily with particles drifting away from the petals and fading out" />
+  <Figure src={particles3} alt="The lily with dissolving petal edges and particles blending into the trails" />
+</ImageRow>
+
+## Oxygen particles
+
+We also explored other ways to visualise the breathing and came up with the idea of oxygen particles rising from the centre of the flower. I experimented with small particles slowly floating upwards from the middle of the lily, like oxygen being released. I adjusted their quantity, rising speed, height, sideways movement, colour and blur to get the movement and appearance just right.
+
+<ImageRow wide caption="Oxygen particles rising from the centre of the lily.">
+  <Figure src={oxygen1} alt="The coral lily with small orange particles rising upwards from the centre of the flower" />
+  <Figure src={oxygen2} alt="Oxygen particles floating up from the middle of the lily" />
+  <Figure src={oxygen3} alt="The lily with a soft cloud of particles drifting above it" />
+</ImageRow>
+
+## See-through petals
+
+Another thing I experimented with was making the petals see-through, to match the soft, dreamy look of our styleboard. I played with the opacity of the whole petal, the middle and the edges, and how softly they blend into each other. In the end, I went for a lower opacity in the middle of the petal and a higher opacity towards the edges, smoothly blended together.
+
+<ImageRow wide caption="Tryouts with see-through petals.">
+  <Figure src={seeThrough1} alt="The lily seen from the front, with petals that are more transparent in the middle and stronger towards the edges" />
+  <Figure src={seeThrough2} alt="The lily with see-through petals in a different opacity setting" />
+  <Figure src={seeThrough3} alt="The lily with softly blended, semi-transparent petals" />
+</ImageRow>
+
+## Combining roots and the new lily
+
+Next, I combined the new lily with the earlier roots I built. I made the roots 3D so they look more realistic. Then I added the same blur on top of them, but not everywhere at once: some parts stay sharp while others are soft, and the blur slowly moves along the branches.
+
+The new lilies now grow along the roots: first the stem and leaves appear, then the flower shows up closed and starts to open. After a while, the roots dissolve into small particles that fade away.
+
+I also made all flowers open and close at the same time, so the whole wall breathes in sync and feels like one living thing instead of separate flowers.
+
+<ImageRow wide caption="The new lilies growing along the 3D roots, with roots dissolving into particles.">
+  <Figure src={roots1} alt="Green 3D roots branching across a dark wall, partly sharp and partly blurred, with pink lilies blooming along them" />
+  <Figure src={roots2} alt="Roots with a few pink lilies, while older parts of the roots dissolve into small fading particles" />
+</ImageRow>
+
+## Working on the root logic
+
+To make sure the roots always look good, I adjusted the rules for how they can grow:
+
+- I played around with how many branches can grow.
+- Branches can't grow in parallel next to each other.
+- I adjusted how far a branch can grow away from your cursor while still following its movement. If a branch is too far away or would have to make a big turn, it stops, and a new branch starts from where your light is.
+- When your light moves over an existing branch, no new branch grows. Instead, that branch becomes slightly thicker and a few leaves appear on it.
+
+## Flower variety
+
+To make the wall feel less repetitive, I added more variety to the flowers. Some grow on a long stem, some on a short one, and some grow directly on the branch, showing only the flower head. They also face different directions, from a side view to a top view. Fully open flowers only keep a subtle blur, so the wall doesn't feel too blurry.
+
+<ImageRow wide caption="More variety: different stem lengths and viewing angles.">
+  <Figure src={variety1} alt="A soft pink lily on a stem with leaves, seen from the side, with blurred roots behind it" />
+  <Figure src={variety2} alt="A pink lily growing from the roots, seen from a different angle" />
+  <Figure src={variety3} alt="A pink lily head growing directly on a branch" />
+</ImageRow>
+
+## Next steps
+
+Next, we will look at how our testing is going. Testing helps us tremendously when we are unsure of what to do or what is right, and especially when we are relying too much on our assumptions. It brings us back to reality (which is a blessing in disguise). Next up: Spend once, test twice: buy a feature test and first round of testing!

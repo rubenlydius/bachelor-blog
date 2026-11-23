@@ -29,4 +29,11 @@ export const readingOrder: string[] = [
 	'room-for-change',
 	'definitely-definitely-defined',
 	'styleboard-final-final-v4',
+	'its-getting-a-little-blurry-in-here',
+	'spend-once-test-twice',
+	'scenic-struggling',
+	'code-in-bloom',
+	'hallo',
+	'pitch-perfect',
+	'you-test-me-right-round-2',
 ];

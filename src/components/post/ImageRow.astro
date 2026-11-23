@@ -5,21 +5,23 @@ interface Props {
 	wide?: boolean;
 	/** One caption under the whole row, instead of under a single image */
 	caption?: string;
+	/** With columns: line images up at the bottom instead of the top */
+	bottom?: boolean;
 }
 
-const { columns, wide = false, caption } = Astro.props;
+const { columns, wide = false, caption, bottom = false } = Astro.props;
 const style = columns ? `--columns: ${columns}` : undefined;
 ---
 
 {caption ? (
 	<figure class:list={['image-row-group', { wide }]}>
-		<div class:list={['image-row', { grid: columns }]} style={style}>
+		<div class:list={['image-row', { grid: columns, bottom }]} style={style}>
 			<slot />
 		</div>
 		<figcaption class="mono">{caption}</figcaption>
 	</figure>
 ) : (
-	<div class:list={['image-row', { wide, grid: columns }]} style={style}>
+	<div class:list={['image-row', { wide, grid: columns, bottom }]} style={style}>
 		<slot />
 	</div>
 )}
@@ -70,8 +72,12 @@ const style = columns ? `--columns: ${columns}` : undefined;
 		display: grid;
 		grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
 	}
-	/* Figures inside a row ignore their own align/spacing */
-	.image-row > :global(.figure) {
+	.image-row.grid.bottom {
+		align-items: end;
+	}
+	/* Figures and Figma embeds inside a row ignore their own align/spacing */
+	.image-row > :global(.figure),
+	.image-row > :global(.figma) {
 		float: none;
 		width: auto;
 		margin: 0;

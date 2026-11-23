@@ -1,0 +1,136 @@
+---
+title: Hallo!
+description: "Building the hall in 3D to test our scenes in"
+date: 2026-11-19
+author: elitsa
+tags: [design, development]
+draft: false
+---
+import hall1 from './hall-1.png';
+import hall2 from './hall-2.png';
+import hall3 from './hall-3.png';
+import hall4 from './hall-4.png';
+import hall5 from './hall-5.png';
+import hall6 from './hall-6.png';
+import blenderHall from './blender-hall.png';
+import detailsRoof from './details-roof.png';
+import detailsDoor from './details-door.png';
+import browser from './browser.png';
+
+## Why a 3D room
+
+We can't test in the real hall until the festival, so I built it in 3D. This way we can see how big the scenes really are on the walls, where people will stand, and how everything feels together. It also lets other people walk through the hall and try the interaction themselves, before anything is built. It's especially useful for remote "testing", and everybody can see what they have coded and get a feel for it.
+
+## Starting from photos
+
+I started with the photos we took when we visited the hall, plus some photos from the internet to fill in what we missed, like the roof and the corners. I used them to get the proportions right: the height of the walls, the big windows, the dark columns and the doors.
+
+<ImageRow wide columns={3} caption="Our own photos of the hall.">
+  <Figure src={hall1} alt="Looking up at the steel roof trusses of the hall, with a hanging crane hook and lamps" />
+  <Figure src={hall2} alt="Another view of the hall" />
+  <Figure src={hall3} alt="Another view of the hall" />
+  <Figure src={hall4} alt="The empty hall with a concrete floor, tall walls and two rows of windows letting in sunlight" />
+  <Figure src={hall5} alt="Another view of the hall" />
+  <Figure src={hall6} alt="The back wall of the hall with dark columns, two rows of windows and the crane under the roof" />
+</ImageRow>
+
+## Modelling the hall in Blender
+
+I began with a plain box: two planes for the floor and the roof, and four for the walls. For the windows and doors I used boolean cutters, simple shapes that cut holes out of the walls. I made the window frames and the columns the same way. I gave every cutter a name starting with `cut_`, so later the code can find and remove them, because they are only needed in Blender.
+
+In the middle of the room I added the curtains. I made them with a curved shape and a boolean, so they get those soft folds. Then I added two planes on the walls as screens, the same size as our projections (4.57 × 3.2 m). I named them `screen_scene1` and `screen_scene2`, because that's where the code puts our scenes later. I also added an empty object called `spawn_entrance` at the door, so you always start where visitors walk in.
+
+<Figure src={blenderHall} alt="The 3D hall in Blender: black curtains forming a corridor in the middle, grey walls with windows and dark columns, a red fire box, and a selected screen plane on the wall outlined in orange" caption="The hall in Blender: curtains in the middle and a screen on the wall." align="wide" />
+
+## Details, because it was fun
+
+Once the basics were there, I got a bit carried away. I added the metal beams of the roof, the red fire box, the emergency lights above the doors and even the tiny hooks on the walls. Those hooks might actually be useful, as we could hang our LED strips from them.
+
+<ImageRow wide caption="The metal beams of the roof and the tiny details nobody will notice.">
+  <Figure src={detailsRoof} alt="The modelled steel roof trusses in Blender, above the walls with columns and windows" />
+  <Figure src={detailsDoor} alt="Close-up in Blender of a door with emergency lights above it, a red fire box and a small hook on the wall" />
+</ImageRow>
+
+## Textures that survive the export
+
+In Blender, procedural materials are made with nodes, and those don't transfer into a .glb file, which is what Three.js loads. So I used image textures instead, for the concrete walls, the floor and the metal. When exporting, I made sure the modifiers were applied, otherwise the boolean holes don't show up. Then everything went into one file: `room.glb`.
+
+## Walking around in Three.js
+
+For the code I reused my Three.js + WebGPU assignment, where I already had a first-person player and screens on planes. You click to lock the mouse and walk with W A S D (Z Q S D works too on an AZERTY keyboard). The player is a capsule, and the room is sorted into an octree, so you bump into walls and curtains instead of walking through them.
+
+When the room loads, the code first removes the cutters:
+
+```js
+// the Blender boolean cutters, only needed in Blender
+const isCutter = (object) => object.name.startsWith('cut_');
+
+export const loadRoom = async () => {
+  const gltf = await new GLTFLoader().loadAsync('room.glb');
+  const room = gltf.scene;
+  // collect first - removing while traversing skips objects
+  const cutters = [];
+  room.traverse((object) => isCutter(object) && cutters.push(object));
+  cutters.forEach((cutter) => cutter.removeFromParent());
+  return room;
+};
+```
+
+To make it feel like a December evening, I added a hemisphere light, a very dim light from above and below, so it's not pitch black. Outside the windows there is a directional light as the moon. It shines in through the windows and casts shadows from the walls and the roof, but not from the glass.
+
+## Our scenes on the walls
+
+Then I added the code my teammates wrote for the two scenes. Each scene draws onto its own hidden canvas, and that canvas becomes the texture of a screen. I used a basic material, so the room's lights don't shade it and it glows like a real projection. Scene 1 uses WebGPU shaders, so it first has to ask the browser for the GPU. That's why I load it with `await`. Scene 2 doesn't need that.
+
+```js
+const setupScreens = () => {
+  for (const screen of screens) {
+    screen.mesh = room.getObjectByName(screen.name);
+    screen.texture = new THREE.CanvasTexture(screen.scene.canvas);
+    screen.texture.colorSpace = THREE.SRGBColorSpace;
+    screen.texture.flipY = false; // glTF: the screen's UVs start at the top - no flip
+    // 'basic' as the room's lights don't shade it, so it glows like a projection
+    screen.mesh.material = new THREE.MeshBasicMaterial({ map: screen.texture });
+  }
+};
+```
+
+In scene 2 I added a light that is always on in the middle of the screen. That's the torch that will always point at the wall in the real hall.
+
+## You are the flashlight
+
+The crosshair in the middle of the view is your flashlight. Every frame, a ray goes from the middle of the view into the room. If it hits one of the screens, the light turns on at that spot, and off on the other screen. Because the ray checks the whole room, a wall or the curtain in between blocks your light, just like in real life. So when you turn from screen 1 to screen 2, the light follows you.
+
+```js
+const aimLight = () => {
+  raycaster.setFromCamera(CROSSHAIR, camera);
+  // the whole room, so a wall or the curtain in between blocks the light
+  const hit = raycaster.intersectObject(room, true)[0];
+  for (const { mesh, scene } of screens) {
+    if (hit?.object === mesh) {
+      // uv 0..1 -> the screen's canvas pixels
+      scene.setLight(true, hit.uv.x * scene.SCREEN_W, hit.uv.y * scene.SCREEN_H);
+    } else {
+      scene.setLight(false);
+    }
+  }
+};
+```
+
+## Putting it online
+
+I built the project with Vite and put it on GitHub Pages, so anyone with the link can walk around in it. I added the link to our concept pitch, so others could try it too. It runs on WebGPU, so it works best in a recent Chrome or Edge.
+
+<Figure src={browser} alt="The 3D hall at night in the browser: scene 1 with roots above blue water on the left wall, and scene 2 with a green root trail and two pale lilies on the right wall" caption="How it looks in the browser." align="wide" />
+
+## Next steps
+
+The room will keep changing with our project. Next, I want to:
+
+- update the scenes regularly, since we change them a lot
+- add the LED strips, maybe on those hooks
+- add the camera that points at the people
+- figure out how to manage the cables
+- add the tables with a torch pointing at each scene, and the baskets full of torches
+
+But before we continue with that, we will prepare our presentation for the concept pitch. Next up: Pitch perfect.
